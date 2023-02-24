@@ -127,6 +127,32 @@ function formattime(dte){
   return hh +':' + mm +':' + ss;
 }
 
+function formatDateTime(d, t) {
+
+  var wrk = d.split('-')
+
+  var date = wrk[1]*1 + '/' + wrk[2]*1 + '/' + wrk[0]*1
+
+  if (t) {
+    // 
+    var wrk = t.split(':')
+    var hr = wrk[0]*1
+    var mm = wrk[1].substr(0,2)
+    var ampm = hr > 11 ? "PM" : "AM"
+    var hh = hr > 12 ? hr - 12 : hr
+
+    var time = hh + ':' + mm + ' ' + ampm
+
+  } else {
+
+    var time = ''
+
+  }
+
+  return date + (time ? ', ' : '')  + time
+
+}
+
 function msToHHMMSS(ms) {
 
   ms = Math.abs(ms)
@@ -151,10 +177,100 @@ function msToHHMMSS(ms) {
 
 }
 
+function parseDateTime(d) {
+
+  var x = d.split(', ')
+
+  var date = x[0]
+  var time = x[1]
+
+  var wrk = date.split('/')
+
+  const pad = x => ('0' + x).slice(-2)
+
+  var dateyymmdd = wrk[2] + '-' + pad(wrk[0]) + '-' + pad(wrk[1])
+
+  if (time) {
+
+    var wrk = time.split(':')
+    var hh = wrk[0]*1
+    var mm = wrk[1]
+    var ampm = mm.substr(3,2)
+    var hr = ampm == "PM" && hh < 12 ? hh + 12 : hh
+    var min = pad(mm.split(' ')[0])
+    var time = hr + ':' + min
+
+  } else {
+
+    var time = ''
+
+  }
+
+  return {
+
+      date: dateyymmdd,
+      time: time
+
+  }
+
+}
+
+function parseMonth(mo) {
+
+  const moNbr = new Map([
+    ['Jan', '01'],
+    ['Feb', '02'],
+    ['Mar', '03'],
+    ['Apr', '04'],
+    ['May', '05'],
+    ['Jun', '06'],
+    ['Jul', '07'],
+    ['Aug', '08'],
+    ['Sep', '09'],
+    ['Oct', '10'],
+    ['Nov', '11'],
+    ['Dec', '12']
+  ])
+
+  var d = mo.split(' ')
+  var yr = d[1]
+
+  var mo =moNbr.get(d[0])
+
+  return yr + '-' + mo
+
+}
+
 function parseDateISOString(s) {
   let ds = s.split(/\D/).map(s => parseInt(s));
   ds[1] = ds[1] - 1; // adjust month
   return new Date(...ds);
+}
+
+function formatMonth(mo) {
+
+  const moAbbr = new Map([
+    ['01', 'Jan'],
+    ['02', 'Feb'],
+    ['03', 'Mar'],
+    ['04', 'Apr'],
+    ['05', 'May'],
+    ['06', 'Jun'],
+    ['07', 'Jul'],
+    ['08', 'Aug'],
+    ['09', 'Sep'],
+    ['10', 'Oct'],
+    ['11', 'Nov'],
+    ['12', 'Dec']
+  ])
+
+  var d = mo.split('-')
+  var yr = d[0]
+
+  var mo =moAbbr.get(d[1])
+
+  return mo + ' ' + yr
+
 }
 
 function formatNumber (str) { 
@@ -252,3 +368,26 @@ function modal(state) {
     $("#overlay").fadeOut("slow");;
   }
 }
+
+function countDisplayed(container) {
+
+  var $eleArr = $('#' + container + ' > div').slice(1)       // remove template
+
+  var tot = $eleArr.length
+  var dnone    = $eleArr.filter( function() {
+                  return $(this).hasClass('d-none') || $(this).css('display') == 'none'}).length
+  var totDisp = tot - dnone
+
+  // return totDisp == tot ? tot : totDisp + ' of ' + tot 
+  return totDisp
+
+}
+
+function debounce(callback, wait) {
+  let timeout;
+  return (...args) => {
+      clearTimeout(timeout);
+      timeout = setTimeout(function () { callback.apply(this, args); }, wait);
+  };
+}
+
