@@ -8,7 +8,11 @@ async function testEncrypted(title) {
 
     var shtHdrs = objSht[title].colHdrs
 
+    console.log('objSht', objSht)
+
     if (shtHdrs[0] == 'Document') {
+
+        console.log('1', shtHdrs[0])
 
         return {
             enc: false,
@@ -27,6 +31,10 @@ async function testEncrypted(title) {
         }
 
     }
+
+                console.log('dec', await decryptMessage(shtHdrs[0]))
+
+
 
     return {
         enc: null,
