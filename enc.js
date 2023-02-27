@@ -10,7 +10,7 @@ async function testEncrypted(title) {
 
     console.log('objSht', objSht)
 
-    if (shtHdrs[0] == 'Document') {
+    if (shtHdrs[0] == 'Provider') {
 
         console.log('1', shtHdrs[0])
 
@@ -21,9 +21,7 @@ async function testEncrypted(title) {
 
     }
 
-    if (await decryptMessage(shtHdrs[0]) == "Document") {
-
-        console.log('dec', await decryptMessage(shtHdrs[0]))
+    if (await decryptMessage(shtHdrs[0]) == "Provider") {
 
         return {
             enc: true,
@@ -31,10 +29,6 @@ async function testEncrypted(title) {
         }
 
     }
-
-                console.log('dec', await decryptMessage(shtHdrs[0]))
-
-
 
     return {
         enc: null,
