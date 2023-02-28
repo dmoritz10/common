@@ -1,5 +1,5 @@
 
-async function testEncrypted(title) {
+async function testEncrypted(title, testSheet) {
 
     var objSht = await openShts(
         [
@@ -10,7 +10,7 @@ async function testEncrypted(title) {
 
     console.log('objSht', objSht)
 
-    if (shtHdrs[0] == 'Provider') {
+    if (shtHdrs[0] == 'testSheet') {
 
         console.log('1', shtHdrs[0])
 
@@ -21,7 +21,7 @@ async function testEncrypted(title) {
 
     }
 
-    if (await decryptMessage(shtHdrs[0]) == "Provider") {
+    if (await decryptMessage(shtHdrs[0]) == "testSheet") {
 
         return {
             enc: true,
@@ -37,7 +37,7 @@ async function testEncrypted(title) {
 
 }
 
-async function encryptSheet(title, pwd = currUser.pwd, called = false) {
+async function encryptSheet(title, pwd = currUser.pwd, called = false, testSheet) {
 
     console.log('encryptSheet')
 
@@ -55,12 +55,12 @@ async function encryptSheet(title, pwd = currUser.pwd, called = false) {
 
     var decHdrs = await decryptMessage(shtHdrs[0], pwd)
 
-    if (decHdrs == "Document") {
+    if (decHdrs == "testSheet") {
         bootbox.alert('Sheet "' + shtTitle + '" is already encrypted.');
         return
     }
 
-    if (shtHdrs[0] != 'Document') {
+    if (shtHdrs[0] != 'testSheet') {
         bootbox.alert('Sheet "' + shtTitle + '" not a valid Sheet.');
         return
     }
@@ -90,7 +90,7 @@ async function encryptSheet(title, pwd = currUser.pwd, called = false) {
 
 }
 
-async function decryptSheet(title, pwd = currUser.pwd, called = false) {
+async function decryptSheet(title, pwd = currUser.pwd, called = false, testSheet) {
 
     if (!called) {
 
@@ -116,7 +116,7 @@ async function decryptSheet(title, pwd = currUser.pwd, called = false) {
 
     console.log('decHdrs', decHdrs)
 
-    if (decHdrs != "Document") {
+    if (decHdrs != "testSheet") {
         bootbox.alert('Sheet "' + shtTitle + '" is not an encrtpted Sheet.');
         return
     }
