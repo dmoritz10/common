@@ -73,7 +73,8 @@ async function encryptSheet(title, testSheet, pwd = currUser.pwd, called = false
 
     await updateSheet(title, encShtArr)
 
-    await encryptImageSheets(objSht[title], pwd)
+    if (shtHdrs.indexOf('File Id') > -1)
+        await encryptImageSheets(objSht[title], pwd)
 
     secSht.enc = true
     shtEnc = true
@@ -140,7 +141,8 @@ async function decryptSheet(title, testSheet, pwd = currUser.pwd, called = false
 
     console.log('decObjSht', decObjSht)
 
-    await decryptImageSheets(decObjSht, pwd)
+    if (shtHdrs.indexOf('File Id') > -1)
+        await decryptImageSheets(decObjSht, pwd)
 
     secSht.enc = false
     shtEnc = false
