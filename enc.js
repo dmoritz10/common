@@ -92,7 +92,7 @@ async function encryptSheet(title, pwd = currUser.pwd, called = false, testSheet
 
 }
 
-async function decryptSheet(title, pwd = currUser.pwd, called = false, testSheet) {
+async function decryptSheet(title, testSheet, pwd = currUser.pwd, called = false) {
 
     if (!called) {
 
