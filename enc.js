@@ -30,6 +30,8 @@ async function testEncrypted(title, testSheet) {
 
     }
 
+    console.log("DEC", await decryptMessage(shtHdrs[0]) == testSheet, testSheet )
+
     return {
         enc: null,
         isSecSht: false
