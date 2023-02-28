@@ -71,7 +71,7 @@ async function encryptSheet(title, pwd = currUser.pwd, called = false, testSheet
 
     console.log('encShtArr', encShtArr)
 
-    await updateSheet(title, encShtArr
+    await updateSheet(title, encShtArr)
 
     await encryptImageSheets(objSht[title], pwd)
 
