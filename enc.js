@@ -39,7 +39,7 @@ async function testEncrypted(title, testSheet) {
 
 }
 
-async function encryptSheet(title, pwd = currUser.pwd, called = false, testSheet) {
+async function encryptSheet(title, testSheet, pwd = currUser.pwd, called = false) {
 
     console.log('encryptSheet')
 
