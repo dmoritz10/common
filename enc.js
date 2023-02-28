@@ -114,7 +114,7 @@ async function decryptSheet(title, pwd = currUser.pwd, called = false, testSheet
     var shtHdrs = objSht[title].colHdrs
     var shtArr = [shtHdrs].concat(objSht[title].vals)
 
-    console.log('descr', shtHdrs, testSheet)
+    console.log('descr', pwd, testSheet)
 
     var decHdrs = await decryptMessage(shtHdrs[0], pwd)
 
