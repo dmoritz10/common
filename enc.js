@@ -114,12 +114,14 @@ async function decryptSheet(title, pwd = currUser.pwd, called = false, testSheet
     var shtHdrs = objSht[title].colHdrs
     var shtArr = [shtHdrs].concat(objSht[title].vals)
 
+    console.log('descr', shtHdrs, testSheet)
+
     var decHdrs = await decryptMessage(shtHdrs[0], pwd)
 
     console.log('decHdrs', decHdrs)
 
     if (decHdrs != testSheet) {
-        bootbox.alert('Sheet "' + shtTitle + '" is not an encrtpted Sheet.');
+        bootbox.alert('Sheet "' + shtTitle + '" is not an encrypted Sheet.');
         return
     }
 
