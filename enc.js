@@ -10,7 +10,7 @@ async function testEncrypted(title, testSheet) {
 
     console.log('objSht', objSht)
 
-    if (shtHdrs[0] == 'testSheet') {
+    if (shtHdrs[0] == testSheet) {
 
         console.log('1', shtHdrs[0])
 
@@ -21,7 +21,7 @@ async function testEncrypted(title, testSheet) {
 
     }
 
-    if (await decryptMessage(shtHdrs[0]) == "testSheet") {
+    if (await decryptMessage(shtHdrs[0]) == testSheet) {
 
         return {
             enc: true,
@@ -55,12 +55,12 @@ async function encryptSheet(title, pwd = currUser.pwd, called = false, testSheet
 
     var decHdrs = await decryptMessage(shtHdrs[0], pwd)
 
-    if (decHdrs == "testSheet") {
+    if (decHdrs == testSheet) {
         bootbox.alert('Sheet "' + shtTitle + '" is already encrypted.');
         return
     }
 
-    if (shtHdrs[0] != 'testSheet') {
+    if (shtHdrs[0] != testSheet) {
         bootbox.alert('Sheet "' + shtTitle + '" not a valid Sheet.');
         return
     }
@@ -69,7 +69,7 @@ async function encryptSheet(title, pwd = currUser.pwd, called = false, testSheet
 
     console.log('encShtArr', encShtArr)
 
-    await updateSheet(title, encShtArr)
+    await updateSheet(title, encShtArr
 
     await encryptImageSheets(objSht[title], pwd)
 
@@ -116,7 +116,7 @@ async function decryptSheet(title, pwd = currUser.pwd, called = false, testSheet
 
     console.log('decHdrs', decHdrs)
 
-    if (decHdrs != "testSheet") {
+    if (decHdrs != testSheet) {
         bootbox.alert('Sheet "' + shtTitle + '" is not an encrtpted Sheet.');
         return
     }
