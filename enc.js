@@ -128,9 +128,12 @@ async function decryptSheet(title, testSheet, pwd = currUser.pwd, called = false
 
     var decShtArr = await decryptArr(shtArr, pwd)
 
+    console.log('decShtArr', decShtArr)
+
     await updateSheet(title, decShtArr)
 
     var decHdrs = decShtArr.shift()
+    console.log('decHdrs', decHdrs)
 
     var decObjSht = {
 
@@ -141,7 +144,9 @@ async function decryptSheet(title, testSheet, pwd = currUser.pwd, called = false
 
     console.log('decObjSht', decObjSht)
 
-    if (shtHdrs.indexOf('File Id') > -1)
+
+
+    if (decHdrs.indexOf('File Id') > -1)
         await decryptImageSheets(decObjSht, pwd)
 
     secSht.enc = false
