@@ -73,7 +73,7 @@ async function encryptSheet(title, testSheet, pwd = currUser.pwd, called = false
 
     await updateSheet(title, encShtArr)
 
-    if (shtHdrs.indexOf('File Id') > -1)
+    if (decHdrs.indexOf('File Id') > -1)
         await encryptImageSheets(objSht[title], pwd)
 
     secSht.enc = true
