@@ -391,3 +391,14 @@ function debounce(callback, wait) {
   };
 }
 
+function colNbrToLtr(n){
+   if (n < 27){
+      return String.fromCharCode(64 + n);
+   }
+  else {
+      var first = Math.round(n / 26);
+  var second = n % 26;
+  return String.fromCharCode(64 + first) + String.fromCharCode(64 + second);
+   }
+}
+
