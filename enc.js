@@ -183,7 +183,8 @@ async function encryptImageSheets(objSht, pwd = currUser.pwd) {
 
         var imgs = await fetchImages(false, fileId, pwd) 
 
-        await postImages(true, fileId, imgs, [null, null], pwd)
+        // await postImages(true, fileId, imgs, [null, null], pwd)
+        await postImages(true, fileId, imgs, pwd)
 
     }
 }
@@ -202,7 +203,7 @@ async function decryptImageSheets(objSht, pwd = currUser.pwd) {
 
         var val = vals[i]
 
-    console.log('decryptImageSheets for in', val)
+        console.log('decryptImageSheets for in', val)
 
 
         var shtObj = makeObj(val, objSht.colHdrs)
@@ -215,7 +216,8 @@ async function decryptImageSheets(objSht, pwd = currUser.pwd) {
 
         console.log('decrupt imgs', imgs.length)
 
-        await postImages(false, fileId, imgs, [null, null], pwd)
+        // await postImages(false, fileId, imgs, [null, null], pwd)
+        await postImages(false, fileId, imgs, pwd)
 
     }
 }
