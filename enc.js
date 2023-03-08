@@ -117,7 +117,7 @@ async function decryptSheet(title, testSheet, pwd = currUser.pwd, called = false
 
     console.log('descr', pwd, testSheet)
 
-    var decHdrs = await decryptArray(shtHdrs, pwd)
+    var decHdrs = await decryptArr(shtHdrs, pwd)
 
     console.log('decHdrs', decHdrs)
 
