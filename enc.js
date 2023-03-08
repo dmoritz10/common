@@ -98,8 +98,9 @@ async function decryptSheet(title, testSheet, pwd = currUser.pwd, called = false
     if (!called) {
 
         var confirmOK = await confirm("Warning !  Decrypting sheet can expose passwords and other sensitive data to others with access to your account.")
-        if (!confirmOK) return
-        modal(true)
+        
+        if (!confirmOK) {modal(true);return}
+        
 
     }
   
