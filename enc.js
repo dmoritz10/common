@@ -113,7 +113,7 @@ async function decryptSheet(title, testSheet, pwd = currUser.pwd, called = false
 
 
     var shtHdrs = objSht[title].colHdrs
-    var shtArr = [shtHdrs].concat(objSht[title].vals)
+    var shtArr = objSht[title].vals
 
     console.log('descr', pwd, testSheet)
 
@@ -128,11 +128,11 @@ async function decryptSheet(title, testSheet, pwd = currUser.pwd, called = false
 
     var decShtArr = await decryptArr(shtArr, pwd)
 
-    console.log('decShtArr', decShtArr)
+    console.log('decShtArr', [decHdrs].concat(decShtArr))
 
-    await updateSheet(title, decShtArr)
+    await updateSheet(title, [decHdrs].concat(decShtArr))
 
-    var decHdrs = decShtArr.shift()
+    // var decHdrs = decShtArr.shift()
     console.log('decHdrs', decHdrs)
 
     var decObjSht = {
