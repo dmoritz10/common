@@ -55,9 +55,9 @@ async function encryptSheet(title, testSheet, pwd = currUser.pwd, called = false
     var shtHdrs = objSht[title].colHdrs
     var shtArr = [shtHdrs].concat(objSht[title].vals)
 
-    var decHdrs = await decryptMessage(shtHdrs[0], pwd)
+    var decHdrs = await decryptMessage(shtHdrs, pwd)
 
-    if (decHdrs == testSheet) {
+    if (decHdrs[0] == testSheet) {
         bootbox.alert('Sheet "' + shtTitle + '" is already encrypted.');
         return
     }
