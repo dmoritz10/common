@@ -751,7 +751,10 @@ async function listDriveFiles(sheetName) {
         
         if (err.result.error.code == 401 || err.result.error.code == 403) {
             await Goth.token()              // for authorization errors obtain an access token
-            let retryResponse = await gapi.client.sheets.spreadsheets.batchUpdate({spreadsheetId: spreadsheetId, resource: request})
+            let retryResponse = await gapi.client.drive.files.list({
+                                    q: q,
+                                    fields: 'nextPageToken, files(id, name, ownedByMe)',
+                                    spaces: 'drive'})
                 .then(async retry => {      console.log('gapi listDriveFiles retry', retry) 
                     
                     return retry})
@@ -815,7 +818,7 @@ async function createDriveFile() {
         
         if (err.result.error.code == 401 || err.result.error.code == 403) {
             await Goth.token()              // for authorization errors obtain an access token
-            let retryResponse = await gapi.client.sheets.spreadsheets.batchUpdate({spreadsheetId: spreadsheetId, resource: request})
+            let retryResponse = await gapi.client.drive.files.create({resource: resource})
                 .then(async retry => {      console.log('gapi createDriveFile retry', retry) 
                     
                     return retry})
@@ -855,7 +858,7 @@ async function deleteDriveFile(fileId) {
         
         if (err.result.error.code == 401 || err.result.error.code == 403) {
             await Goth.token()              // for authorization errors obtain an access token
-            let retryResponse = await gapi.client.sheets.spreadsheets.batchUpdate({spreadsheetId: spreadsheetId, resource: request})
+            let retryResponse = await gapi.client.drive.files.delete({fileId : fileId})
                 .then(async retry => {      console.log('gapi deleteDriveFile retry', retry) 
                     
                     return retry})
