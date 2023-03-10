@@ -940,7 +940,7 @@ console.log('begin', ts(new Date()))
   
   var wtArr = writeThrottleArr
   var oma = new Date();
-  oma.setMinutes(oma.getMinutes() - 60);
+  oma.setMinutes(oma.getMinutes() - 1);
 
   console.log('writeThrottle', wtArr, ts(oma))
 
