@@ -951,7 +951,7 @@ console.log('begin', ts(new Date()))
 
   if (wtArr.length > maxWritesPerMin - nbrWrites - 3) {
     
-    console.log('delay', ts(new Date() - wtArr[0]))
+    console.log('delay', ts(wtArr[0]))
     await delay (new Date() - wtArr[0]);
     console.log('delay resume', ts(new Date()))
   
