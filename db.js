@@ -926,3 +926,36 @@ async function renameDriveFile(fileId, fileName) {
 
 }
 
+var writeThrottleArr = []
+
+async function writeThrottle(nbrWrites) {
+
+console.log('begin', new Date())
+
+  const maxWritesPerMin = 60
+  const delay = (ms) => new Promise(res => setTimeout(res, ms));
+  var wtArr = writeThrottleArr
+  var oma = new Date();
+  oma.setMinutes(oma.getMinutes() - 60);
+
+  console.log('writeThrottle', wtArr, oma)
+
+  for (let i=wtArr.length-1; i<0; i--) {
+    if (wrArr[i] < oma) wrArr.splice(i, 1)
+    console.log('remove wrArr', i, wrArr[i])
+  }
+
+  if (wrArr.length > maxWritesPerMin - nbrWrites - 3) {
+    
+    console.log('delay', new Date() - wrArr[0])
+    await delay (new Date() - wrArr[0]);
+    console.log('delay resume', new Date())
+  
+  }
+
+console.log('resume', new Date())
+
+  wrArr.push(new Date())
+  return
+
+}
