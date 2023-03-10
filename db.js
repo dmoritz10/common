@@ -946,7 +946,7 @@ console.log('begin', ts(new Date()))
 
   for (let i=wtArr.length-1; i>=0; i--) {
     if (wtArr[i] > oma) wtArr.splice(i, 1)
-    console.log('remove wtArr', i, wtArr[i], ts(oma))
+    console.log('remove wtArr', i, ts(wtArr[i]), ts(oma))
   }
 
   if (wtArr.length > maxWritesPerMin - nbrWrites - 3) {
