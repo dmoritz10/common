@@ -936,7 +936,7 @@ console.log('begin', ts(new Date()))
 
   const maxWritesPerMin = 60
   const delay = (ms) => new Promise(res => setTimeout(res, ms));
-  const ts = (dt) => dt.toISOString().substring(11,23)
+  var ts = (dt) => dt.toISOString().substring(11,23)
   
   var wtArr = writeThrottleArr
   var oma = new Date();
