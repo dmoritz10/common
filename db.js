@@ -945,7 +945,7 @@ console.log('begin', ts(new Date()))
   console.log('writeThrottle', wtArr, ts(oma))
 
   for (let i=wtArr.length-1; i>=0; i--) {
-    if (wtArr[i] > oma) {console.log('remove wtArr', i, ts(wtArr[i]), ts(oma));wtArr.splice(i, 1)}
+    if (wtArr[i] < oma) {console.log('remove wtArr', i, ts(wtArr[i]), ts(oma));wtArr.splice(i, 1)}
     
   }
 
