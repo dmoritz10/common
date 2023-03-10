@@ -932,30 +932,32 @@ var writeThrottleArr = []
 
 async function writeThrottle(nbrWrites = 1) {
 
-console.log('begin', new Date())
+console.log('begin', ts(new Date()))
 
   const maxWritesPerMin = 60
   const delay = (ms) => new Promise(res => setTimeout(res, ms));
+  const ts = (dt) => dt.toISOString().substring(11,23)
+  
   var wtArr = writeThrottleArr
   var oma = new Date();
   oma.setMinutes(oma.getMinutes() - 60);
 
-  console.log('writeThrottle', wtArr, oma)
+  console.log('writeThrottle', wtArr, ts(oma))
 
-  for (let i=wtArr.length-1; i>-1; i--) {
-    if (wtArr[i] < oma) wtArr.splice(i, 1)
-    console.log('remove wtArr', i, wtArr[i])
+  for (let i=wtArr.length-1; i>=0; i--) {
+    if (wtArr[i] > oma) wtArr.splice(i, 1)
+    console.log('remove wtArr', i, wtArr[i], ts(oma))
   }
 
   if (wtArr.length > maxWritesPerMin - nbrWrites - 3) {
     
-    console.log('delay', new Date() - wtArr[0])
+    console.log('delay', ts(new Date() - wtArr[0]))
     await delay (new Date() - wtArr[0]);
-    console.log('delay resume', new Date())
+    console.log('delay resume', ts(new Date()))
   
   }
 
-console.log('resume', new Date())
+console.log('resume', ts(new Date()))
 
   wtArr.push(new Date())
   return
