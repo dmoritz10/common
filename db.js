@@ -930,7 +930,7 @@ async function renameDriveFile(fileId, fileName) {
 
 var writeThrottleArr = []
 
-async function writeThrottle(nbrWrites) {
+async function writeThrottle(nbrWrites = 1) {
 
 console.log('begin', new Date())
 
@@ -943,21 +943,21 @@ console.log('begin', new Date())
   console.log('writeThrottle', wtArr, oma)
 
   for (let i=wtArr.length-1; i<0; i--) {
-    if (wrArr[i] < oma) wrArr.splice(i, 1)
-    console.log('remove wrArr', i, wrArr[i])
+    if (wtArr[i] < oma) wtArr.splice(i, 1)
+    console.log('remove wtArr', i, wtArr[i])
   }
 
-  if (wrArr.length > maxWritesPerMin - nbrWrites - 3) {
+  if (wtArr.length > maxWritesPerMin - nbrWrites - 3) {
     
-    console.log('delay', new Date() - wrArr[0])
-    await delay (new Date() - wrArr[0]);
+    console.log('delay', new Date() - wtArr[0])
+    await delay (new Date() - wtArr[0]);
     console.log('delay resume', new Date())
   
   }
 
 console.log('resume', new Date())
 
-  wrArr.push(new Date())
+  wtArr.push(new Date())
   return
 
 }
