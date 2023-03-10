@@ -932,11 +932,11 @@ var writeThrottleArr = []
 
 async function writeThrottle(nbrWrites = 1) {
 
-console.log('begin', ts(new Date()))
-
   const maxWritesPerMin = 60
   const delay = (ms) => new Promise(res => setTimeout(res, ms));
-  var ts = (dt) => dt.toISOString().substring(11,23)
+  const ts = (dt) => dt.toISOString().substring(11,23)
+  
+console.log('begin', ts(new Date()))
   
   var wtArr = writeThrottleArr
   var oma = new Date();
