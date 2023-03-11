@@ -946,7 +946,7 @@ var wtArr = []
 
 async function writeThrottle(nbrWrites = 1) {
 
-  const maxWritesPerMin = 60
+  const maxWritesPerMin = 30
   const delay = (ms) => new Promise(res => setTimeout(res, ms));
   const ts = (dt) => dt.toISOString().substring(11,23)
 
