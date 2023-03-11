@@ -972,9 +972,10 @@ console.log('begin', ts(new Date()))
   
   }
 
-console.log('resume', ts(new Date()))
+  console.log('resume', ts(new Date()))
 
-  wtArr.push(new Date())
+  for (let i = 0;i<nbrWrites;i++) wtArr.push(new Date())
+
   return
 
 }
