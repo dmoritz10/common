@@ -16,6 +16,8 @@ function readOption(key, defaultReturn = '') {
 
 async function updateOption(key, val) {
 
+  await writeThrottle(1)
+
   if (typeof val === "object") {
     var strVal = JSON.stringify(val)
   } else {
@@ -211,6 +213,8 @@ async function getSheetRange(rng, sht, ssId = spreadsheetId) {
 
 async function clearSheetRange(rng, sht, ssId = spreadsheetId) {
 
+  await writeThrottle(1)
+
   var params = {
     spreadsheetId: ssId, 
     range: "'" + sht + "'!" + rng
@@ -331,6 +335,8 @@ async function updateSheet(title, vals) {
 
   console.log('promiseArr', promiseArr)
 
+  await writeThrottle(promiseArr.length)
+
   await Promise.all(promiseArr)
 
 } 
@@ -395,6 +401,8 @@ async function updateSheetRow(vals, shtIdx, shtTitle, ssId = spreadsheetId) {
 }
 
 async function appendSheetRow(vals, shtTitle) {
+  
+  await writeThrottle(1)
 
   var resource = {
     "majorDimension": "ROWS",
@@ -508,6 +516,8 @@ async function deleteSheetRow(idx, sheetName) {
 
 async function updateSheetHdr(vals, shtTitle) {
 
+  await writeThrottle(1)
+
   var resource = {
     "majorDimension": "ROWS",
     "values": [vals]    
@@ -561,6 +571,8 @@ async function updateSheetHdr(vals, shtTitle) {
 }
 
 async function renameSheet(shtId, shtTitle) {
+  
+  await writeThrottle(1)
 
   const rq = {"requests" : [
     {
@@ -614,6 +626,8 @@ async function renameSheet(shtId, shtTitle) {
 }
 
 async function copySheet(shtId) {
+
+  await writeThrottle(1)
 
   var params = {
     spreadsheetId: spreadsheetId,  
