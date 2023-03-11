@@ -337,7 +337,7 @@ async function updateSheet(title, vals) {
 
 async function updateSheetRow(vals, shtIdx, shtTitle, ssId = spreadsheetId) {
 
-  writeThrottle(1)
+  await writeThrottle(1)
 
   var resource = {
     "majorDimension": "ROWS",
