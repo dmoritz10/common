@@ -956,7 +956,7 @@ console.log('begin', ts(new Date()))
   var oma = new Date();
   oma.setMinutes(oma.getMinutes() - 1);
 
-  console.log('writeThrottle', oma, wtArr.map( ele => ts(ele)), wtArr.map( ele => ele - oma))
+  console.log('writeThrottle', ts(oma), wtArr.map( ele => ts(ele)), wtArr.map( ele => ele - oma))
   // console.log('oma', ts(oma), ts(wtArr[i]), wtArr[i] < oma)
 
   for (let i=wtArr.length-1; i>=0; i--) {
