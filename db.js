@@ -943,7 +943,7 @@ console.log('begin', ts(new Date()))
   oma.setMinutes(oma.getMinutes() - 1);
 
   console.log('writeThrottle', wtArr.map( ele => ts(ele)))
-  console.log('oma', oma, wtArr[i], wtArr[i] < oma)
+  console.log('oma', ts(oma), ts(wtArr[i]), wtArr[i] < oma)
 
   for (let i=wtArr.length-1; i>=0; i--) {
     if (wtArr[i] < oma) {console.log('remove wtArr', i, ts(wtArr[i]), ts(oma));wtArr.splice(i, 1)}
@@ -952,8 +952,8 @@ console.log('begin', ts(new Date()))
 
   if (wtArr.length > maxWritesPerMin - nbrWrites - 3) {
     
-    console.log('delay', new Date() - wtArr[0])
-    await delay (new Date() - wtArr[0]);
+    console.log('delay', wtArr[0] - oma)
+    await delay (wtArr[0] - oma);
     console.log('delay resume', ts(new Date()))
   
   }
