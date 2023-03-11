@@ -943,6 +943,7 @@ console.log('begin', ts(new Date()))
   oma.setMinutes(oma.getMinutes() - 1);
 
   console.log('writeThrottle', wtArr.map( ele => ts(ele)))
+  console.log('oma', oma, wtArr[i], wtArr[i] < oma)
 
   for (let i=wtArr.length-1; i>=0; i--) {
     if (wtArr[i] < oma) {console.log('remove wtArr', i, ts(wtArr[i]), ts(oma));wtArr.splice(i, 1)}
