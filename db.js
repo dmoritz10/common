@@ -800,19 +800,19 @@ async function listDriveFiles(sheetName) {
 
 async function getSSId(sheetName) {
 
-var response = await listDriveFiles(sheetName)
+  var response = await listDriveFiles(sheetName)
 
-if (!response) return
+  if (!response) return
 
-var files = response.result.files
+  var files = response.result.files
 
-if (!files || files.length == 0)
-    return { fileId: null, msg: "'" + sheetName + "' not found" }
+  if (!files || files.length == 0)
+      return { fileId: null, msg: "'" + sheetName + "' not found" }
 
-if (files.length > 1)
-    return { fileId: null, msg: "'" + sheetName + "' not unique" }
+  if (files.length > 1)
+      return { fileId: null, msg: "'" + sheetName + "' not unique" }
 
-return { fileId: files[0].id, msg: 'ok' }
+  return { fileId: files[0].id, msg: 'ok' }
 
 }
 
