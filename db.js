@@ -835,6 +835,45 @@ async function getSheetId(shtTitle) {
   return null
 }
 
+var wtArr = []
+
+async function writeThrottle(nbrWrites = 1) {
+
+  const maxWritesPerMin = 30
+  const delay = (ms) => new Promise(res => setTimeout(res, ms));
+  const ts = (dt) => dt.toISOString().substring(11,23)
+
+console.log('begin', ts(new Date()))
+  
+  // var wtArr = writeThrottleArr
+  var oma = new Date();
+  oma.setMinutes(oma.getMinutes() - 1);
+
+  console.log('writeThrottle', ts(oma), wtArr.map( ele => ts(ele)), wtArr.map( ele => ele - oma))
+  // console.log('oma', ts(oma), ts(wtArr[i]), wtArr[i] < oma)
+
+  for (let i=wtArr.length-1; i>=0; i--) {
+    if (wtArr[i] < oma) {console.log('remove wtArr', i, ts(wtArr[i]), ts(oma));wtArr.splice(i, 1)}
+    
+  }
+
+  if (wtArr.length > maxWritesPerMin - nbrWrites - 3) {
+    
+    console.log('delay', wtArr[0] - oma)
+    await delay (wtArr[0] - oma);
+    console.log('delay resume', ts(new Date()))
+  
+  }
+
+  console.log('resume', ts(new Date()))
+
+  for (let i = 0;i<nbrWrites;i++) wtArr.push(new Date())
+
+  return
+
+}
+
+
 //  Drive
 
 async function listDriveFiles(sheetName) {
@@ -1032,40 +1071,38 @@ async function renameDriveFile(fileId, fileName) {
 
 }
 
-var wtArr = []
+//  Calendar
 
-async function writeThrottle(nbrWrites = 1) {
+async function updateCalendarEvent(eventId, event) {
 
-  const maxWritesPerMin = 30
-  const delay = (ms) => new Promise(res => setTimeout(res, ms));
-  const ts = (dt) => dt.toISOString().substring(11,23)
+  var request = await gapi.client.calendar.events.update({
+    'calendarId': 'primary',
+    'eventId': eventId,
+    'resource': event
+  });
 
-console.log('begin', ts(new Date()))
-  
-  // var wtArr = writeThrottleArr
-  var oma = new Date();
-  oma.setMinutes(oma.getMinutes() - 1);
+  return request
 
-  console.log('writeThrottle', ts(oma), wtArr.map( ele => ts(ele)), wtArr.map( ele => ele - oma))
-  // console.log('oma', ts(oma), ts(wtArr[i]), wtArr[i] < oma)
+}
 
-  for (let i=wtArr.length-1; i>=0; i--) {
-    if (wtArr[i] < oma) {console.log('remove wtArr', i, ts(wtArr[i]), ts(oma));wtArr.splice(i, 1)}
-    
-  }
+async function insertCalendarEvent(event) {
 
-  if (wtArr.length > maxWritesPerMin - nbrWrites - 3) {
-    
-    console.log('delay', wtArr[0] - oma)
-    await delay (wtArr[0] - oma);
-    console.log('delay resume', ts(new Date()))
-  
-  }
+  var request = await gapi.client.calendar.events.insert({
+    'calendarId': 'primary',
+    'resource': event
+  });
 
-  console.log('resume', ts(new Date()))
+  return request
 
-  for (let i = 0;i<nbrWrites;i++) wtArr.push(new Date())
+}
 
-  return
+async function deleteCalendarEvent(eventId) {
+
+  var request = await gapi.client.calendar.events.insert({
+    'calendarId': 'primary',
+    'eventId': eventId
+  });
+
+  return request
 
 }
