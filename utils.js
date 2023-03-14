@@ -287,6 +287,14 @@ function formatNumber (str) {
 
 };
 
+function formatPercent (str, nbrDec) {
+
+  if (!str) {return}
+
+  return Number((str* 100).toFixed(nbrDec))  + "%";
+
+}
+
 function promiseRun (func) {
 
 // this is a trick to convert the arguments array into an array, and drop the first one
