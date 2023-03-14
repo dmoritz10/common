@@ -260,6 +260,49 @@ return response
 
 }
 
+async function batchUpdateSheet(resource) {
+  
+  await writeThrottle(1)
+
+  var response = await gapi.client.sheets.spreadsheets.batchUpdate({spreadsheetId: spreadsheetId, resource: sortSpec})
+    .then(async response => {               console.log('gapi batchUpdateSheet first try', response)
+        
+        return response})
+
+    .catch(async err  => {                  console.log('gapi batchUpdateSheet catch', err)
+        
+        if (err.result.error.code == 401 || err.result.error.code == 403) {
+            await Goth.token()              // for authorization errors obtain an access token
+            let retryResponse = await gapi.client.sheets.spreadsheets.batchUpdate({spreadsheetId: spreadsheetId, resource: sortSpec})
+                .then(async retry => {      console.log('gapi batchUpdateSheet retry', retry) 
+                    
+                    return retry})
+
+                .catch(err  => {            console.log('gapi batchUpdateSheet error2', err)
+                    
+                    bootbox.alert('gapi batchUpdateSheet error: ' + err.result.error.code + ' - ' + err.result.error.message);
+
+                    return null });         // cancelled by user, timeout, etc.
+
+            return retryResponse
+
+        } else {
+            
+          console.error('error updating sheet'  + '": ' + err.result.error.message);
+          bootbox.alert('error updating sheet'  + '": ' + err.result.error.message);
+
+            return null
+
+        }
+            
+    })
+    
+                                            console.log('after gapi batchUpdateSheet')
+
+  return response
+
+}
+
 async function updateSheet(title, vals) {
 
   var nbrRows = vals.length
