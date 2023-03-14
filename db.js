@@ -1098,7 +1098,7 @@ async function insertCalendarEvent(event) {
 
 async function deleteCalendarEvent(eventId) {
 
-  var request = await gapi.client.calendar.events.insert({
+  var request = await gapi.client.calendar.events.delete({
     'calendarId': 'primary',
     'eventId': eventId
   });
