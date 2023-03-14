@@ -574,9 +574,9 @@ async function sortSheet(sortSpec, shtTitle) {
   
   await writeThrottle(1)
 
-  console.log('sortSpec', sortSpec)
 
   sortSpec.requests[0].sortRange.range.sheetId = getSheetId(shtTitle)
+  console.log('sortSpec', sortSpec)
 
   var response = await gapi.client.sheets.spreadsheets.batchUpdate({spreadsheetId: spreadsheetId, resource: sortSpec})
     .then(async response => {               console.log('gapi renameSheet first try', response)
