@@ -570,6 +570,53 @@ async function updateSheetHdr(vals, shtTitle) {
 
 }
 
+async function sortSheet(sortSpec, shtTitle) {
+  
+  await writeThrottle(1)
+
+  console.log('sortSpec', sortSpec)
+
+  sortSpec.requests[0].sortRange.range.sheetId = getSheetId(shtTitle)
+
+  var response = await gapi.client.sheets.spreadsheets.batchUpdate({spreadsheetId: spreadsheetId, resource: sortSpec})
+    .then(async response => {               console.log('gapi renameSheet first try', response)
+        
+        return response})
+
+    .catch(async err  => {                  console.log('gapi renameSheet catch', err)
+        
+        if (err.result.error.code == 401 || err.result.error.code == 403) {
+            await Goth.token()              // for authorization errors obtain an access token
+            let retryResponse = await gapi.client.sheets.spreadsheets.batchUpdate({spreadsheetId: spreadsheetId, resource: sortSpec})
+                .then(async retry => {      console.log('gapi renameSheet retry', retry) 
+                    
+                    return retry})
+
+                .catch(err  => {            console.log('gapi renameSheet error2', err)
+                    
+                    bootbox.alert('gapi renameSheet error: ' + err.result.error.code + ' - ' + err.result.error.message);
+
+                    return null });         // cancelled by user, timeout, etc.
+
+            return retryResponse
+
+        } else {
+            
+          console.error('error updating row'  + '": ' + err.result.error.message);
+          bootbox.alert('error updating row'  + '": ' + err.result.error.message);
+
+            return null
+
+        }
+            
+    })
+    
+                                            console.log('after gapi renameSheet')
+
+  return response
+
+}
+
 async function renameSheet(shtId, shtTitle) {
   
   await writeThrottle(1)
