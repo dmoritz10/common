@@ -264,7 +264,7 @@ async function batchUpdateSheet(resource) {
   
   await writeThrottle(1)
 
-  var response = await gapi.client.sheets.spreadsheets.batchUpdate({spreadsheetId: spreadsheetId, resource: sortSpec})
+  var response = await gapi.client.sheets.spreadsheets.batchUpdate({spreadsheetId: spreadsheetId, resource: resource})
     .then(async response => {               console.log('gapi batchUpdateSheet first try', response)
         
         return response})
@@ -273,7 +273,7 @@ async function batchUpdateSheet(resource) {
         
         if (err.result.error.code == 401 || err.result.error.code == 403) {
             await Goth.token()              // for authorization errors obtain an access token
-            let retryResponse = await gapi.client.sheets.spreadsheets.batchUpdate({spreadsheetId: spreadsheetId, resource: sortSpec})
+            let retryResponse = await gapi.client.sheets.spreadsheets.batchUpdate({spreadsheetId: spreadsheetId, resource: resource})
                 .then(async retry => {      console.log('gapi batchUpdateSheet retry', retry) 
                     
                     return retry})
