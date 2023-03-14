@@ -575,7 +575,7 @@ async function sortSheet(sortSpec, shtTitle) {
   await writeThrottle(1)
 
 
-  sortSpec.requests[0].sortRange.range.sheetId = getSheetId(shtTitle)
+  sortSpec.requests[0].sortRange.range.sheetId = await getSheetId(shtTitle)
   console.log('sortSpec', sortSpec)
 
   var response = await gapi.client.sheets.spreadsheets.batchUpdate({spreadsheetId: spreadsheetId, resource: sortSpec})
