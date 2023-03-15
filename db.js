@@ -79,7 +79,6 @@ async function updateOption(key, val) {
 
 }
 
-// var openShts = async function (shts, ssId = spreadsheetId) {
 async function openShts(shts, ssId = spreadsheetId) {
 
 
