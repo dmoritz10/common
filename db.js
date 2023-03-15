@@ -1175,11 +1175,6 @@ async function insertCalendarEvent(event) {
 
 async function deleteCalendarEvent(eventId) {
 
-  var request = await gapi.client.calendar.events.delete({
-    'calendarId': 'primary',
-    'eventId': eventId
-  });
-
   await writeThrottle(1)
 
   var response = await gapi.client.calendar.events.delete({
