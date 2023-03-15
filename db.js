@@ -1179,7 +1179,7 @@ async function deleteCalendarEvent(eventId) {
 
   var response = await gapi.client.calendar.events.delete({
                                           'calendarId': 'primary',
-                                          'resource': eventId
+                                          'eventId': eventId
                                         })
     .then(async response => {               console.log('gapi deleteCalendarEvent first try', response)
         
@@ -1191,7 +1191,7 @@ async function deleteCalendarEvent(eventId) {
             await Goth.token()              // for authorization errors obtain an access token
             let retryResponse = await gapi.client.calendar.events.delete({
                                         'calendarId': 'primary',
-                                        'resource': eventId
+                                        'eventId': eventId
                                       })
                 .then(async retry => {      console.log('gapi deleteCalendarEvent retry', retry) 
                     
