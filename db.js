@@ -264,7 +264,7 @@ async function batchUpdateSheet(resource) {
   
   await writeThrottle(1)
 
-  var response = await gapi.client.sheets.spreadsheets.batchUpdate({spreadsheetId: spreadsheetId, resource: resource})
+  var response = await gapi.client.sheets.spreadsheets.values.batchUpdate({spreadsheetId: spreadsheetId, resource: resource})
     .then(async response => {               console.log('gapi batchUpdateSheet first try', response)
         
         return response})
