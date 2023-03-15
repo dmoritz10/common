@@ -1075,24 +1075,101 @@ async function renameDriveFile(fileId, fileName) {
 
 async function updateCalendarEvent(eventId, event) {
 
-  var request = await gapi.client.calendar.events.update({
-    'calendarId': 'primary',
-    'eventId': eventId,
-    'resource': event
-  });
+  await writeThrottle(1)
 
-  return request
+  var response = await gapi.client.calendar.events.update({
+                                          'calendarId': 'primary',
+                                          'eventId': eventId,
+                                          'resource': event
+                                        })
+    .then(async response => {               console.log('gapi updateCalendarEvent first try', response)
+        
+        return response})
+
+    .catch(async err  => {                  console.log('gapi updateCalendarEvent catch', err)
+        
+        if (err.result.error.code == 401 || err.result.error.code == 403) {
+            await Goth.token()              // for authorization errors obtain an access token
+            let retryResponse = await gapi.client.calendar.events.update({
+                                        'calendarId': 'primary',
+                                        'eventId': eventId,
+                                        'resource': event
+                                      })
+                .then(async retry => {      console.log('gapi updateCalendarEvent retry', retry) 
+                    
+                    return retry})
+
+                .catch(err  => {            console.log('gapi updateCalendarEvent error2', err)
+                    
+                    bootbox.alert('gapi batchUpdateSheet error: ' + err.result.error.code + ' - ' + err.result.error.message);
+
+                    return null });         // cancelled by user, timeout, etc.
+
+            return retryResponse
+
+        } else {
+            
+          console.error('error updating event'  + '": ' + err.result.error.message);
+          bootbox.alert('error updating event'  + '": ' + err.result.error.message);
+
+            return null
+
+        }
+            
+    })
+    
+                                            console.log('after gapi updateCalendarEvent')
+
+  return response
 
 }
 
 async function insertCalendarEvent(event) {
 
-  var request = await gapi.client.calendar.events.insert({
-    'calendarId': 'primary',
-    'resource': event
-  });
+  await writeThrottle(1)
 
-  return request
+  var response = await gapi.client.calendar.events.insert({
+                                          'calendarId': 'primary',
+                                          'resource': event
+                                        })
+    .then(async response => {               console.log('gapi insertCalendarEvent first try', response)
+        
+        return response})
+
+    .catch(async err  => {                  console.log('gapi insertCalendarEvent catch', err)
+        
+        if (err.result.error.code == 401 || err.result.error.code == 403) {
+            await Goth.token()              // for authorization errors obtain an access token
+            let retryResponse = await gapi.client.calendar.events.insert({
+                                        'calendarId': 'primary',
+                                        'resource': event
+                                      })
+                .then(async retry => {      console.log('gapi insertCalendarEvent retry', retry) 
+                    
+                    return retry})
+
+                .catch(err  => {            console.log('gapi insertCalendarEvent error2', err)
+                    
+                    bootbox.alert('gapi batchUpdateSheet error: ' + err.result.error.code + ' - ' + err.result.error.message);
+
+                    return null });         // cancelled by user, timeout, etc.
+
+            return retryResponse
+
+        } else {
+            
+          console.error('error updating event'  + '": ' + err.result.error.message);
+          bootbox.alert('error updating event'  + '": ' + err.result.error.message);
+
+            return null
+
+        }
+            
+    })
+    
+                                            console.log('after gapi insertCalendarEvent')
+
+  return response
 
 }
 
@@ -1103,6 +1180,50 @@ async function deleteCalendarEvent(eventId) {
     'eventId': eventId
   });
 
-  return request
+  await writeThrottle(1)
+
+  var response = await gapi.client.calendar.events.delete({
+                                          'calendarId': 'primary',
+                                          'resource': eventId
+                                        })
+    .then(async response => {               console.log('gapi deleteCalendarEvent first try', response)
+        
+        return response})
+
+    .catch(async err  => {                  console.log('gapi deleteCalendarEvent catch', err)
+        
+        if (err.result.error.code == 401 || err.result.error.code == 403) {
+            await Goth.token()              // for authorization errors obtain an access token
+            let retryResponse = await gapi.client.calendar.events.delete({
+                                        'calendarId': 'primary',
+                                        'resource': eventId
+                                      })
+                .then(async retry => {      console.log('gapi deleteCalendarEvent retry', retry) 
+                    
+                    return retry})
+
+                .catch(err  => {            console.log('gapi deleteCalendarEvent error2', err)
+                    
+                    bootbox.alert('gapi batchUpdateSheet error: ' + err.result.error.code + ' - ' + err.result.error.message);
+
+                    return null });         // cancelled by user, timeout, etc.
+
+            return retryResponse
+
+        } else {
+            
+          console.error('error updating event'  + '": ' + err.result.error.message);
+          bootbox.alert('error updating event'  + '": ' + err.result.error.message);
+
+            return null
+
+        }
+            
+    })
+    
+                                            console.log('after gapi deleteCalendarEvent')
+
+  return response
+
 
 }
