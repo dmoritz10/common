@@ -6,7 +6,7 @@ const Retrier = class {
       this.opts.delay = opts.delay || 0;
       this.opts.firstAttemptDelay = opts.firstAttemptDelay || 0;
       this.opts.reAuth = opts.reAuth || [401, 403];
-      this.opts.quotaExceeded = opts.quotaExceeded;
+      this.opts.quotaExceeded = opts.quotaExceeded || [408, 429];
   }
   resolve(fn) {
       this.fn = fn;
@@ -532,7 +532,7 @@ async function updateSheetRowTest(vals, shtIdx, shtTitle, ssId = spreadsheetId) 
     };
 
   let fn = gapi.client.sheets.spreadsheets.values.update(params, resource)
-  const options = { limit: 5, delay: 2000 };
+  const options = { limit: 5, delay: 2000};
   const retrier = new Retrier(options);
 
   let response = await retrier
