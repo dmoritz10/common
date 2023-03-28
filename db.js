@@ -29,11 +29,11 @@ const Retrier = class {
               return this._reject(new Error('Expecting function which returns promise!'));
           }
           promise.then(response => {
-              console.log('then', response, this.attempt)
+              console.log('then', response.status, this.attempt, 2 ** this.attempt * this.opts.delay)
 
               this._resolve(response);
           }, async error => {
-              console.log('error', error, this.attempt)
+              console.log('error', error.status, this.attempt, 2 ** this.attempt * this.opts.delay)
 
               if (this.opts.reAuth.indexOf(error.status) > -1) {
                   await Goth.token()              // for authorization errors obtain an access token
@@ -44,7 +44,7 @@ const Retrier = class {
                   this._doRetry(error);
               }
           });
-      }, this.attempt === 0 ? this.opts.firstAttemptDelay : this.opts.delay);
+      }, this.attempt === 0 ? this.opts.firstAttemptDelay : 2 ** this.attempt * this.opts.delay);
   }
 }
 
