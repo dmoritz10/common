@@ -383,6 +383,123 @@ async function updateSheet(title, vals) {
 
 } 
 
+async function updateSheetTest(title, vals) {
+
+  var nbrRows = vals.length
+  var maxRows = 5000
+  var strtRow = 0
+  var currRow = 0
+
+  var promiseArr = []
+
+  while (vals.length > 0) {
+
+    strtRow = currRow
+
+    var chunk = vals.splice(0, maxRows)
+
+    currRow += chunk.length
+
+    console.log('strtRow', strtRow)
+    console.log('currRow', currRow)
+    console.log('chunk', chunk)
+    console.log('vals.length', vals.length)
+
+
+    var resource = {
+      "majorDimension": "ROWS",
+      "values": chunk   
+    }
+
+    var rng = calcRngA1(strtRow + 1, 1, chunk.length, chunk[0].length)
+
+    var params = {
+    spreadsheetId: spreadsheetId,
+    range: "'" + title + "'!" + rng,
+    valueInputOption: 'RAW'
+    };
+
+
+    promiseArr.push(
+       
+      gapi.client.sheets.spreadsheets.values.update(params, resource)
+        .then(async response => {               console.log('gapi updateSheet first try', response)
+            
+            return response})
+
+        .catch(async err  => {                  console.log('gapi updateSheet catch', err)
+            
+            if (err.result.error.code == 401 || err.result.error.code == 403) {
+                await Goth.token()              // for authorization errors obtain an access token
+                let retryResponse = await gapi.client.sheets.spreadsheets.values.update(params, resource)
+                    .then(async retry => {      console.log('gapi updateSheet retry', retry) 
+                        
+                        return retry})
+
+                    .catch(err  => {            console.log('gapi updateSheet error2', err)
+                        
+                        bootbox.alert('gapi updateSheet error: ' + err.result.error.code + ' - ' + err.result.error.message);
+
+                        return null });         // cancelled by user, timeout, etc.
+
+                return retryResponse
+
+            } else {
+                
+                bootbox.alert('gapi updateSheet error: ' + shtTitle + ' - ' + err.result.error.message);
+                return null
+
+            }
+                
+        })
+        
+    )
+  }
+
+  console.log('promiseArr', promiseArr)
+
+  await writeThrottle(promiseArr.length)
+
+  await Promise.all(promiseArr)
+
+} 
+
+async function updateSheetRowTest(vals, shtIdx, shtTitle, ssId = spreadsheetId) {
+
+  var resource = {
+    "majorDimension": "ROWS",
+    "values": [vals]    
+  }
+
+    console.log('update', shtIdx)
+
+    var row = shtIdx
+    var rng = calcRngA1(row, 1, 1, vals.length)
+
+    var params = {
+      spreadsheetId: ssId,
+      range: "'" + shtTitle + "'!" + rng,
+      valueInputOption: 'RAW'
+    };
+
+  let fn = gapi.client.sheets.spreadsheets.values.update(params, resource)
+  const options = { limit: 5, delay: 2000 };
+  const retrier = new Retrier(options);
+
+  let response = await retrier
+    .resolve(async attempt => fn)
+    .then(
+      result => {console.log(result);return result},
+      error => {console.error(error) ;return error}
+    );
+
+    console.log('response', response)
+
+
+  return response
+
+}
+
 async function updateSheetRow(vals, shtIdx, shtTitle, ssId = spreadsheetId) {
 
   await writeThrottle(1)

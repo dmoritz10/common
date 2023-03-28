@@ -29,11 +29,11 @@ export class Retrier {
                 return this._reject(new Error('Expecting function which returns promise!'));
             }
             promise.then(response => {
-                console.log('then', response)
+                console.log('then', response, this.attempt)
 
                 this._resolve(response);
             }, async error => {
-                console.log('error', error)
+                console.log('error', error, this.attempt)
 
                 if (this.opts.reAuth.indexOf(error.status) > -1) {
                     await Goth.token()              // for authorization errors obtain an access token
