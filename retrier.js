@@ -23,6 +23,8 @@ export class Retrier {
         }
         setTimeout(() => {
             const promise = this.fn(this.attempt);
+
+            console.log('setto', promise, this.fn)
             if (!(promise instanceof Promise)) {
                 // TODO: throw error in contructor if params aren't valid
                 return this._reject(new Error('Expecting function which returns promise!'));
