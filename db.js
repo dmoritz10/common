@@ -309,6 +309,32 @@ return response
 
 }
 
+async function clearSheetRangeTest(rng, sht, ssId = spreadsheetId) {
+
+  await writeThrottle(1)
+
+  var params = {
+    spreadsheetId: ssId, 
+    range: "'" + sht + "'!" + rng
+  };
+
+  let fn = gapi.client.sheets.spreadsheets.values.clear(params)
+  const options = { limit: 5, delay: 2000};
+  const retrier = new Retrier(options);
+
+  let response = await retrier
+    .resolve(async attempt => fn)
+    .then(
+      result => {console.log(result);return result},
+      error => {console.error(error) ;return error}
+    );
+    
+                                            console.log('after gapi clearSheetRange')
+
+return response
+
+}
+
 async function batchUpdateSheet(resource) {
   
   await writeThrottle(1)
