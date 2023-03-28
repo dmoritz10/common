@@ -30,13 +30,7 @@ export class Retrier {
                 return this._reject(new Error('Expecting function which returns promise!'));
             }
             promise.then(response => {
-                // if (this.opts.keepRetryingIf && this.opts.keepRetryingIf(response, this.attempt)) {
-                //     this.attempt++;
-                //     this._doRetry();
-                // }
-                // else {
-                    this._resolve(response);
-                // }
+                this._resolve(response);
             }, async error => {
                 if (this.opts.reAuth.indexOf(error.status) > -1) {
                     await Goth.token()              // for authorization errors obtain an access token
