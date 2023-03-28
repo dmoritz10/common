@@ -5,8 +5,8 @@ export class Retrier {
         this.opts.limit = opts.limit || 1;
         this.opts.delay = opts.delay || 0;
         this.opts.firstAttemptDelay = opts.firstAttemptDelay || 0;
-        this.opts.keepRetryingIf = opts.keepRetryingIf;
-        this.opts.stopRetryingIf = opts.stopRetryingIf;
+        this.opts.reAuth = opts.reAuth || [401, 403];
+        this.opts.quotaExceeded = opts.quotaExceeded;
     }
     resolve(fn) {
         this.fn = fn;
@@ -30,18 +30,19 @@ export class Retrier {
                 return this._reject(new Error('Expecting function which returns promise!'));
             }
             promise.then(response => {
-                if (this.opts.keepRetryingIf && this.opts.keepRetryingIf(response, this.attempt)) {
-                    this.attempt++;
-                    this._doRetry();
-                }
-                else {
+                // if (this.opts.keepRetryingIf && this.opts.keepRetryingIf(response, this.attempt)) {
+                //     this.attempt++;
+                //     this._doRetry();
+                // }
+                // else {
                     this._resolve(response);
+                // }
+            }, async error => {
+                if (this.opts.reAuth.indexOf(error.status) > -1) {
+                    await Goth.token()              // for authorization errors obtain an access token
+                    this._doRetry(error);
                 }
-            }, error => {
-                if (this.opts.stopRetryingIf && this.opts.stopRetryingIf(error, this.attempt)) {
-                    this._reject(error);
-                }
-                else {
+                else if (this.opts.quotaExceeded.indexOf(error.status) > -1) {
                     this.attempt++;
                     this._doRetry(error);
                 }
