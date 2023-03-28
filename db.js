@@ -47,6 +47,7 @@ const Retrier = class {
       }, this.attempt === 0 ? this.opts.firstAttemptDelay : this.opts.delay);
   }
 }
+
 //  database access
 
 //  Sheets
@@ -1003,6 +1004,8 @@ async function getSheetId(shtTitle) {
 var wtArr = []
 
 async function writeThrottle(nbrWrites = 1) {
+
+  return
 
   const maxWritesPerMin = 30
   const delay = (ms) => new Promise(res => setTimeout(res, ms));
