@@ -24,14 +24,17 @@ export class Retrier {
         setTimeout(() => {
             const promise = this.fn(this.attempt);
 
-            console.log('setto', promise, this.fn)
             if (!(promise instanceof Promise)) {
                 // TODO: throw error in contructor if params aren't valid
                 return this._reject(new Error('Expecting function which returns promise!'));
             }
             promise.then(response => {
+                console.log('then', response)
+
                 this._resolve(response);
             }, async error => {
+                console.log('error', error)
+
                 if (this.opts.reAuth.indexOf(error.status) > -1) {
                     await Goth.token()              // for authorization errors obtain an access token
                     this._doRetry(error);
