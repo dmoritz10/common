@@ -42,6 +42,9 @@ export class Retrier {
                 else if (this.opts.quotaExceeded.indexOf(error.status) > -1) {
                     this.attempt++;
                     this._doRetry(error);
+                } else {
+                    this.attempt++;
+                    this._doRetry(error);
                 }
             });
         }, this.attempt === 0 ? this.opts.firstAttemptDelay : this.opts.delay);
