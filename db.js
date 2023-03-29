@@ -10,6 +10,8 @@ const Retrier = class {
   }
   resolve(fn) {
       this.fn = fn;
+
+      console.log('resolve fn', fn)
       return new Promise((resolve, reject) => {
           this._resolve = resolve;
           this._reject = reject;
@@ -22,6 +24,8 @@ const Retrier = class {
           return this._reject(recentError || new Error('Retry limit reached!'));
       }
       setTimeout(() => {
+
+        console.log('this.fb', this.fn)
           const promise = this.fn(this.attempt);
 
           console.log('promise', promise)
@@ -326,7 +330,7 @@ async function clearSheetRangeTest(rng, sht, ssId = spreadsheetId) {
     range: "'" + sht + "'!" + rng
   };
 
-  const fn = async () => await gapi.client.sheets.spreadsheets.values.clear(params)
+  const fn = gapi.client.sheets.spreadsheets.values.clear(params)
   console.log('fn1', fn)
 
 
@@ -568,7 +572,7 @@ async function updateSheetRowTest(vals, shtIdx, shtTitle, ssId = spreadsheetId) 
       valueInputOption: 'RAW'
     };
 
-    let fn = () =>  gapi.client.sheets.spreadsheets.values.update(params, resource)
+    let fn = gapi.client.sheets.spreadsheets.values.update(params, resource)
 
 /* 
 fds
