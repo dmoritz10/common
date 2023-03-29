@@ -326,7 +326,7 @@ async function clearSheetRangeTest(rng, sht, ssId = spreadsheetId) {
     range: "'" + sht + "'!" + rng
   };
 
-  let fn = gapi.client.sheets.spreadsheets.values.clear(params)
+  let fn = () => gapi.client.sheets.spreadsheets.values.clear(params)
   console.log('fn', fn)
 
 
@@ -568,7 +568,7 @@ async function updateSheetRowTest(vals, shtIdx, shtTitle, ssId = spreadsheetId) 
       valueInputOption: 'RAW'
     };
 
-  let fn = gapi.client.sheets.spreadsheets.values.update(params, resource)
+    let fn = () =>  gapi.client.sheets.spreadsheets.values.update(params, resource)
 
 /* 
 // asdf
