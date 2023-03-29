@@ -21,7 +21,8 @@ const Retrier = class {
   }
   _doRetry(recentError) {
       if (this.attempt >= this.opts.limit) {
-          return this._reject(recentError || new Error('Retry limit reached!'));
+          // return this._reject(recentError || new Error('Retry limit reached!'));
+          return this._reject(new Error('Retry limit reached!'));
       }
       setTimeout(() => {
 
@@ -340,7 +341,7 @@ async function clearSheetRangeTest(rng, sht, ssId = spreadsheetId) {
     .resolve(async attempt => fn)
     .then(
       result => {console.log(result);return result},
-      error => {console.error(error) ;return error}
+      error =>  {console.log(error) ;return error}
     );
     
                                             console.log('after gapi clearSheetRange')
@@ -582,7 +583,7 @@ async function updateSheetRowTest(vals, shtIdx, shtTitle, ssId = spreadsheetId) 
     .resolve(async attempt => fn)
     .then(
       result => {console.log('result', result);return result},
-      error => {console.error('error', error) ;return error}
+      error =>  {console.log(error) ;return error}
     );
 
     console.log('response', response)
