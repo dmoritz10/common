@@ -337,7 +337,7 @@ async function clearSheetRangeTest(rng, sht, ssId = spreadsheetId) {
   const options = { limit: 5, delay: 2000};
   const retrier = new Retrier(options);
   let response = await retrier
-    .resolve(attempt => fn)
+    .resolve(async attempt => fn)
     .then(
       result => {console.log(result);return result},
       error => {console.error(error) ;return error}
@@ -573,32 +573,6 @@ async function updateSheetRowTest(vals, shtIdx, shtTitle, ssId = spreadsheetId) 
     };
 
     let fn = gapi.client.sheets.spreadsheets.values.update(params, resource)
-
-/* 
-fds
-dsf
-fs
-fs
-dfs
-dfs
-adfs
-asd
-fas
-df
-asd
-fas
-df
-asd
-fa
-sdf
-asd
-fa
-sdf
-as
-df
-asdf
-d
-*/   
 
   console.log('fn1', fn)
   const options = { limit: 5, delay: 2000};
