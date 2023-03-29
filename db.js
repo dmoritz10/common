@@ -36,6 +36,7 @@ const Retrier = class {
               return this._reject(new Error('Expecting function which returns promise!'));
           }
           promise.then(response => {
+            console.log('promise 123', {...promise})
               console.log('then', response.status, this.attempt, this.opts.limit, 2 ** this.attempt * this.opts.delay)
 
               this._resolve(response);
