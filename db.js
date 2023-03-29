@@ -27,9 +27,10 @@ const Retrier = class {
       setTimeout(async () => {
 
         console.log('this.fb', this.fn())
-          let promise = this.fn();
+        var promise
+          var promise = this.fn();
 
-          console.log('promise', JSON.parse(JSON.stringify(promise)))
+          console.log('promise', promise)
 
           if (!(promise instanceof Promise)) {
               // TODO: throw error in contructor if params aren't valid
