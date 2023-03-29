@@ -327,7 +327,7 @@ async function clearSheetRangeTest(rng, sht, ssId = spreadsheetId) {
   };
 
   let fn = () => gapi.client.sheets.spreadsheets.values.clear(params)
-  console.log('fn', fn)
+  console.log('fn1', fn)
 
 
   const options = { limit: 5, delay: 2000};
@@ -587,7 +587,7 @@ df
 // f
 */   
 
-  console.log('fn', fn)
+  console.log('fn1', fn)
   const options = { limit: 5, delay: 2000};
   const retrier = new Retrier(options);
 
