@@ -570,13 +570,22 @@ async function updateSheetRowTest(vals, shtIdx, shtTitle, ssId = spreadsheetId) 
 
   let fn = gapi.client.sheets.spreadsheets.values.update(params, resource)
 
-// 
+/* 
 // asdf
 // as
 // df
 // asd
+as
+ads
+f
+asdf
+as
+df
+asdf
+as
+df
 // f
-//   
+*/   
 
   console.log('fn', fn)
   const options = { limit: 5, delay: 2000};
