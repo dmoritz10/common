@@ -36,13 +36,16 @@ export class Retrier {
                 console.log('error', error, this.attempt)
 
                 if (this.opts.reAuth.indexOf(error.status) > -1) {
+                    console.log('if')
                     await Goth.token()              // for authorization errors obtain an access token
                     this._doRetry(error);
                 }
                 else if (this.opts.quotaExceeded.indexOf(error.status) > -1) {
+                    console.log('else if')
                     this.attempt++;
                     this._doRetry(error);
                 } else {
+                    console.log('else')
                     this.attempt++;
                     this._doRetry(error);
                 }
