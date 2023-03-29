@@ -36,13 +36,19 @@ const Retrier = class {
               console.log('error', error.status, this.attempt, this.opts.limit, 2 ** this.attempt * this.opts.delay)
 
               if (this.opts.reAuth.indexOf(error.status) > -1) {
-                  await Goth.token()              // for authorization errors obtain an access token
+                console.log('if', error)
+                await Goth.token()              // for authorization errors obtain an access token
                   this._doRetry(error);
               }
               else if (this.opts.quotaExceeded.indexOf(error.status) > -1) {
-                  this.attempt++;
+                console.log('else if', error)
+                this.attempt++;
                   this._doRetry(error);
-              }
+              }else {
+                console.log('else', error)
+                this.attempt++;
+                this._doRetry(error);
+            }
           });
       }, this.attempt === 0 ? this.opts.firstAttemptDelay : 2 ** this.attempt * this.opts.delay);
   }
