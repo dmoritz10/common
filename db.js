@@ -570,6 +570,14 @@ async function updateSheetRowTest(vals, shtIdx, shtTitle, ssId = spreadsheetId) 
 
   let fn = gapi.client.sheets.spreadsheets.values.update(params, resource)
 
+// 
+// asdf
+// as
+// df
+// asd
+// f
+//   
+
   console.log('fn', fn)
   const options = { limit: 5, delay: 2000};
   const retrier = new Retrier(options);
