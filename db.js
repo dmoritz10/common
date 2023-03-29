@@ -24,7 +24,7 @@ const Retrier = class {
       setTimeout(() => {
           const promise = this.fn(this.attempt);
 
-          console.log('promise xxx', xxx)
+          console.log('promise', promise)
 
           if (!(promise instanceof Promise)) {
               // TODO: throw error in contructor if params aren't valid
@@ -326,7 +326,7 @@ async function clearSheetRangeTest(rng, sht, ssId = spreadsheetId) {
     range: "'" + sht + "'!" + rng
   };
 
-  const fn = () => await gapi.client.sheets.spreadsheets.values.clear(params)
+  const fn = async () => await gapi.client.sheets.spreadsheets.values.clear(params)
   console.log('fn1', fn)
 
 
