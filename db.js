@@ -49,8 +49,7 @@ const Retrier = class {
               } 
               else {
                 console.log('else', error)
-                this.attempt++;
-                this._doRetry(error);
+                this._reject(error)
               }
           });
       }, this.attempt === 0 ? this.opts.firstAttemptDelay : 2 ** this.attempt * this.opts.delay);
@@ -328,8 +327,10 @@ async function clearSheetRangeTest(rng, sht, ssId = spreadsheetId) {
   };
 
   let fn = gapi.client.sheets.spreadsheets.values.clear(params)
+  console.log('fn', fn)
 
-  const options = { limit: 10, delay: 2000};
+
+  const options = { limit: 5, delay: 2000};
   const retrier = new Retrier(options);
   let response = await retrier
     .resolve(async attempt => fn)
@@ -568,7 +569,9 @@ async function updateSheetRowTest(vals, shtIdx, shtTitle, ssId = spreadsheetId) 
     };
 
   let fn = gapi.client.sheets.spreadsheets.values.update(params, resource)
-  const options = { limit: 10, delay: 2000};
+
+  console.log('fn', fn)
+  const options = { limit: 5, delay: 2000};
   const retrier = new Retrier(options);
 
   let response = await retrier
