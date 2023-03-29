@@ -22,15 +22,15 @@ const Retrier = class {
           return this._reject(recentError || new Error('Retry limit reached!'));
       }
       setTimeout(() => {
-          const xxx = this.fn(this.attempt);
+          const promise = this.fn(this.attempt);
 
           console.log('promise xxx', xxx)
 
-          if (!(xxx instanceof Promise)) {
+          if (!(promise instanceof Promise)) {
               // TODO: throw error in contructor if params aren't valid
               return this._reject(new Error('Expecting function which returns promise!'));
           }
-          xxx.then(response => {
+          promise.then(response => {
               console.log('then', response.status, this.attempt, this.opts.limit, 2 ** this.attempt * this.opts.delay)
 
               this._resolve(response);
@@ -326,14 +326,14 @@ async function clearSheetRangeTest(rng, sht, ssId = spreadsheetId) {
     range: "'" + sht + "'!" + rng
   };
 
-  let fn = () => gapi.client.sheets.spreadsheets.values.clear(params)
+  const fn = () => await gapi.client.sheets.spreadsheets.values.clear(params)
   console.log('fn1', fn)
 
 
   const options = { limit: 5, delay: 2000};
   const retrier = new Retrier(options);
   let response = await retrier
-    .resolve(async attempt => fn)
+    .resolve(attempt => fn)
     .then(
       result => {console.log(result);return result},
       error => {console.error(error) ;return error}
