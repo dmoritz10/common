@@ -22,15 +22,15 @@ const Retrier = class {
           return this._reject(recentError || new Error('Retry limit reached!'));
       }
       setTimeout(() => {
-          const promise = this.fn(this.attempt);
+          const xxx = this.fn(this.attempt);
 
-          console.log('promise', promise)
+          console.log('promise xxx', xxx)
 
-          if (!(promise instanceof Promise)) {
+          if (!(xxx instanceof Promise)) {
               // TODO: throw error in contructor if params aren't valid
               return this._reject(new Error('Expecting function which returns promise!'));
           }
-          promise.then(response => {
+          xxx.then(response => {
               console.log('then', response.status, this.attempt, this.opts.limit, 2 ** this.attempt * this.opts.delay)
 
               this._resolve(response);
