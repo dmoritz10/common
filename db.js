@@ -27,7 +27,7 @@ const Retrier = class {
       setTimeout(async () => {
 
         console.log('this.fb', this.fn())
-          let promise = this.fn(this.attempt);
+          let promise = this.fn();
 
           console.log('promise', JSON.parse(JSON.stringify(promise)))
 
