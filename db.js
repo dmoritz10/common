@@ -24,6 +24,8 @@ const Retrier = class {
       setTimeout(() => {
           const promise = this.fn(this.attempt);
 
+          console.log('promise', promise)
+
           if (!(promise instanceof Promise)) {
               // TODO: throw error in contructor if params aren't valid
               return this._reject(new Error('Expecting function which returns promise!'));
@@ -38,12 +40,12 @@ const Retrier = class {
               if (this.opts.reAuth.indexOf(error.status) > -1) {
                 console.log('if', error)
                 await Goth.token()              // for authorization errors obtain an access token
-                  this._doRetry(error);
+                this._doRetry(error);
               }
               else if (this.opts.quotaExceeded.indexOf(error.status) > -1) {
                 console.log('else if', error)
                 this.attempt++;
-                  this._doRetry(error);
+                this._doRetry(error);
               } 
               // else {
               //   console.log('else', error)
