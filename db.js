@@ -41,6 +41,7 @@ const Retrier = class {
 
               this._resolve(response);
           }, async error => {
+            console.log('promise 456', {...promise})
               console.log('error', error.status, this.attempt, this.opts.limit, 2 ** this.attempt * this.opts.delay)
 
               if (this.opts.reAuth.indexOf(error.status) > -1) {
