@@ -24,12 +24,12 @@ const Retrier = class {
           // return this._reject(recentError || new Error('Retry limit reached!'));
           return this._reject(new Error('Retry limit reached!'));
       }
-      setTimeout(() => {
+      setTimeout(async () => {
 
-        console.log('this.fb', {...this.fn})
-          const promise = this.fn(this.attempt);
+        console.log('this.fb', JSON.parse(JSON.stringify(this.fn)))
+          const promise = await this.fn(this.attempt);
 
-          console.log('promise', {...promise})
+          console.log('promise', JSON.parse(JSON.stringify(promise)))
 
           if (!(promise instanceof Promise)) {
               // TODO: throw error in contructor if params aren't valid
