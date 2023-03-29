@@ -44,11 +44,12 @@ const Retrier = class {
                 console.log('else if', error)
                 this.attempt++;
                   this._doRetry(error);
-              }else {
-                console.log('else', error)
-                this.attempt++;
-                this._doRetry(error);
-            }
+              } 
+              // else {
+              //   console.log('else', error)
+              //   this.attempt++;
+              //   this._doRetry(error);
+              // }
           });
       }, this.attempt === 0 ? this.opts.firstAttemptDelay : 2 ** this.attempt * this.opts.delay);
   }
