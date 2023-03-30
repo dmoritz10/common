@@ -28,7 +28,7 @@ const Retrier = class {
 
         console.log('this.fb', this.fn())
         var promise
-          var promise = await this.fn();
+          var promise = this.fn();
 
           console.log('promise', promise)
 
@@ -41,7 +41,7 @@ const Retrier = class {
               console.log('then', response.status, this.attempt, this.opts.limit, 2 ** this.attempt * this.opts.delay)
 
               this._resolve(response);
-          }, async error => {
+          }).catch( async error => {
             console.log('promise 456', JSON.parse(JSON.stringify(promise)))
               console.log('error', error.status, this.attempt, this.opts.limit, 2 ** this.attempt * this.opts.delay)
 
