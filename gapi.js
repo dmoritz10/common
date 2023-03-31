@@ -232,44 +232,21 @@ const Retrier = class {
   
   }
   
-  async function batchUpdateSheet(resource) {
+  async function batchUpdateSheet(resource) { // *
     
-    await writeThrottle(1)
-  
-    var response = await gapi.client.sheets.spreadsheets.values.batchUpdate({spreadsheetId: spreadsheetId, resource: resource})
-      .then(async response => {               console.log('gapi batchUpdateSheet first try', response)
-          
-          return response})
-  
-      .catch(async err  => {                  console.log('gapi batchUpdateSheet catch', err)
-          
-          if (err.result.error.code == 401 || err.result.error.code == 403) {
-              await Goth.token()              // for authorization errors obtain an access token
-              let retryResponse = await gapi.client.sheets.spreadsheets.batchUpdate({spreadsheetId: spreadsheetId, resource: resource})
-                  .then(async retry => {      console.log('gapi batchUpdateSheet retry', retry) 
-                      
-                      return retry})
-  
-                  .catch(err  => {            console.log('gapi batchUpdateSheet error2', err)
-                      
-                      bootbox.alert('gapi batchUpdateSheet error: ' + err.result.error.code + ' - ' + err.result.error.message);
-  
-                      return null });         // cancelled by user, timeout, etc.
-  
-              return retryResponse
-  
-          } else {
-              
-            console.error('error updating sheet'  + '": ' + err.result.error.message);
-            bootbox.alert('error updating sheet'  + '": ' + err.result.error.message);
-  
-              return null
-  
-          }
-              
-      })
-      
-                                              console.log('after gapi batchUpdateSheet')
+    const callerName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
+    console.log('pre gapi', callerName)     
+    
+    const options = { limit: 5, delay: 2000};
+    const retrier = new Retrier(options);
+    let response = await retrier
+    .resolve(async attempt => gapi.client.sheets.spreadsheets.values.batchUpdate({spreadsheetId: spreadsheetId, resource: resource}))
+    .then(
+        result => {console.log('result', result);return result},
+        error =>  {console.log(error) ;return error}
+    );
+    
+    console.log('post gapi', callerName)      
   
     return response
   
@@ -283,6 +260,7 @@ const Retrier = class {
     var currRow = 0
   
     var promiseArr = []
+    var responseArr = []
   
     while (vals.length > 0) {
   
@@ -312,47 +290,60 @@ const Retrier = class {
       };
   
   
-      promiseArr.push(
-         
-        gapi.client.sheets.spreadsheets.values.update(params, resource)
-          .then(async response => {               console.log('gapi updateSheet first try', response)
+    //   promiseArr.push(
+    //     gapi.client.sheets.spreadsheets.values.update(params, resource)
+    //       .then(async response => {               console.log('gapi updateSheet first try', response)
               
-              return response})
-  
-          .catch(async err  => {                  console.log('gapi updateSheet catch', err)
+    //           return response})
+    //       .catch(async err  => {                  console.log('gapi updateSheet catch', err)
               
-              if (err.result.error.code == 401 || err.result.error.code == 403) {
-                  await Goth.token()              // for authorization errors obtain an access token
-                  let retryResponse = await gapi.client.sheets.spreadsheets.values.update(params, resource)
-                      .then(async retry => {      console.log('gapi updateSheet retry', retry) 
+    //           if (err.result.error.code == 401 || err.result.error.code == 403) {
+    //               await Goth.token()              // for authorization errors obtain an access token
+    //               let retryResponse = await gapi.client.sheets.spreadsheets.values.update(params, resource)
+    //                   .then(async retry => {      console.log('gapi updateSheet retry', retry) 
                           
-                          return retry})
+    //                       return retry})
   
-                      .catch(err  => {            console.log('gapi updateSheet error2', err)
+    //                   .catch(err  => {            console.log('gapi updateSheet error2', err)
                           
-                          bootbox.alert('gapi updateSheet error: ' + err.result.error.code + ' - ' + err.result.error.message);
+    //                       bootbox.alert('gapi updateSheet error: ' + err.result.error.code + ' - ' + err.result.error.message);
   
-                          return null });         // cancelled by user, timeout, etc.
+    //                       return null });         // cancelled by user, timeout, etc.
   
-                  return retryResponse
+    //               return retryResponse
   
-              } else {
+    //           } else {
                   
-                  bootbox.alert('gapi updateSheet error: ' + shtTitle + ' - ' + err.result.error.message);
-                  return null
+    //               bootbox.alert('gapi updateSheet error: ' + shtTitle + ' - ' + err.result.error.message);
+    //               return null
   
-              }
+    //           }
                   
-          })
-          
-      )
+    //       })
+    //   )
+
+  
+    const callerName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
+    console.log('pre gapi', callerName)     
+
+    const options = { limit: 5, delay: 2000};
+    const retrier = new Retrier(options);
+    let response = await retrier
+      .resolve(async attempt => gapi.client.sheets.spreadsheets.values.update(params, resource))
+      .then(
+        result => {console.log(result);return result},
+        error =>  {console.log(error) ;return error}
+      );
+      
+    console.log('post gapi', callerName)     
+  
+    responseArr.push(response)
+
+
     }
-  
-    console.log('promiseArr', promiseArr)
-  
-    await writeThrottle(promiseArr.length)
-  
-    await Promise.all(promiseArr)
+    // await Promise.all(promiseArr)
+
+    return responseArr
   
   } 
   
@@ -496,48 +487,24 @@ const Retrier = class {
   
   }
   
-  async function sortSheet(sortSpec, shtTitle) {
+  async function sortSheet(sortSpec, shtTitle) { // *
     
-    await writeThrottle(1)
-  
-  
     sortSpec.requests[0].sortRange.range.sheetId = await getSheetId(shtTitle)
     console.log('sortSpec', sortSpec)
-  
-    var response = await gapi.client.sheets.spreadsheets.batchUpdate({spreadsheetId: spreadsheetId, resource: sortSpec})
-      .then(async response => {               console.log('gapi renameSheet first try', response)
-          
-          return response})
-  
-      .catch(async err  => {                  console.log('gapi renameSheet catch', err)
-          
-          if (err.result.error.code == 401 || err.result.error.code == 403) {
-              await Goth.token()              // for authorization errors obtain an access token
-              let retryResponse = await gapi.client.sheets.spreadsheets.batchUpdate({spreadsheetId: spreadsheetId, resource: sortSpec})
-                  .then(async retry => {      console.log('gapi renameSheet retry', retry) 
-                      
-                      return retry})
-  
-                  .catch(err  => {            console.log('gapi renameSheet error2', err)
-                      
-                      bootbox.alert('gapi renameSheet error: ' + err.result.error.code + ' - ' + err.result.error.message);
-  
-                      return null });         // cancelled by user, timeout, etc.
-  
-              return retryResponse
-  
-          } else {
-              
-            console.error('error updating row'  + '": ' + err.result.error.message);
-            bootbox.alert('error updating row'  + '": ' + err.result.error.message);
-  
-              return null
-  
-          }
-              
-      })
-      
-                                              console.log('after gapi renameSheet')
+
+    const callerName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
+    console.log('pre gapi', callerName)     
+    
+    const options = { limit: 5, delay: 2000};
+    const retrier = new Retrier(options);
+    let response = await retrier
+    .resolve(async attempt => gapi.client.sheets.spreadsheets.batchUpdate({spreadsheetId: spreadsheetId, resource: sortSpec}))
+    .then(
+        result => {console.log('result', result);return result},
+        error =>  {console.log(error) ;return error}
+    );
+    
+    console.log('post gapi', callerName)      
   
     return response
   
