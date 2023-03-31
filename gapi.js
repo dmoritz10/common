@@ -52,7 +52,7 @@ const Retrier = class {
     }
   }
   
-const getFName = () => new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
+const getFName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
 
   //  database access
   
