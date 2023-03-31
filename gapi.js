@@ -111,6 +111,8 @@ const Retrier = class {
   
   async function openShts(shts, ssId = spreadsheetId) { // *
   
+    console.log('before gapixxx ', this.constructor.name)     
+
   
     return new Promise(async resolve => {
   
