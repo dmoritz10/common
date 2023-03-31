@@ -70,7 +70,7 @@ const getFName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
     
   }
   
-  async function updateOption(key, val) { // *
+  async function updateOption(key, val) { // **
 
     if (typeof val === "object") {
       var strVal = JSON.stringify(val)
@@ -96,7 +96,7 @@ const getFName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
       valueInputOption: 'RAW'
     };
 
-    console.log('before gapi updateOption *')
+    console.log('pre gapi', getfName()) 
   
     const options = { limit: 5, delay: 2000};
     const retrier = new Retrier(options);
@@ -107,7 +107,7 @@ const getFName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
         error =>  {console.log(error) ;return error}
       );
   
-    console.log('after gapi updateOption *')     
+      console.log('post gapi', getfName())      
   
   }
   
@@ -182,47 +182,25 @@ const getFName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
   }
   
   async function getSheetRange(rng, sht, ssId = spreadsheetId) {
+
+    console.log('pre gapi', getfName())     
+
+    const options = { limit: 5, delay: 2000};
+    const retrier = new Retrier(options);
+    let response = await retrier
+      .resolve(async attempt => gapi.client.sheets.spreadsheets.values.batchGet({spreadsheetId: ssId, ranges: ["'" + sht + "'!" + rng]})
+      .then(
+        result => {console.log('result', result);return result},
+        error =>  {console.log(error) ;return error}
+      );
   
-      var response = await gapi.client.sheets.spreadsheets.values.batchGet({spreadsheetId: ssId, ranges: ["'" + sht + "'!" + rng]})
-        .then(async response => {               console.log('gapi getSheetRange first try', response)
-            
-            return response})
-  
-        .catch(async err  => {                  console.log('gapi getSheetRange catch', err)
-            
-            if (err.result.error.code == 401 || err.result.error.code == 403) {
-                await Goth.token()              // for authorization errors obtain an access token
-                let retryResponse = await gapi.client.sheets.spreadsheets.values.batchGet({spreadsheetId: ssId, ranges: ["'" + sht + "'!" + rng]})
-                    .then(async retry => {      console.log('gapi getSheetRange retry', retry) 
-                        
-                        return retry})
-  
-                    .catch(err  => {            console.log('gapi getSheetRange error2', err)
-                        
-                        bootbox.alert('gapi getSheetRange error: ' + err.result.error.code + ' - ' + err.result.error.message);
-  
-                        return null });         // cancelled by user, timeout, etc.
-  
-                return retryResponse
-  
-            } else {
-                
-              console.error('error reading sheet: ' + err.result.error.message);
-              bootbox.alert('error reading sheet: ' + err.result.error.message);
-  
-                return null
-  
-            }
-                
-        })
-        
-                                                console.log('after gapi getSheetRange')
-  
+    console.log('post gapi',  getfName())       
+
     return response
   
   }
   
-  async function clearSheetRange(rng, sht, ssId = spreadsheetId) { // *
+  async function clearSheetRange(rng, sht, ssId = spreadsheetId) { // **
     
     var params = {
       spreadsheetId: ssId, 
