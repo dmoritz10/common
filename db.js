@@ -29,9 +29,9 @@ const Retrier = class {
       }
       setTimeout(async () => {
 
-        console.log('this.fb', this.fn(this.opts.params, this.opts.resource))
+        // console.log('this.fb', this.fn())
         var promise
-          var promise = this.fn(this.opts.params, this.opts.resource);
+          var promise = this.fn();
 
           console.log('promise', promise)
 
@@ -40,7 +40,7 @@ const Retrier = class {
               return this._reject(new Error('Expecting function which returns promise!'));
           }
           promise.then(response => {
-            console.log('promise 123', JSON.parse(JSON.stringify(promise)))
+            console.log('promise 123', promise)
               console.log('then', response.status, this.attempt, this.opts.limit, 2 ** this.attempt * this.opts.delay)
 
               this._resolve(response);
@@ -344,7 +344,7 @@ async function clearSheetRangeTest(rng, sht, ssId = spreadsheetId) {
   const options = { limit: 5, delay: 2000, params: params};
   const retrier = new Retrier(options);
   let response = await retrier
-    .resolve(async attempt => fn)
+    .resolve(async attempt => fn(params))
     .then(
       result => {console.log(result);return result},
       error =>  {console.log(error) ;return error}
@@ -586,7 +586,7 @@ async function updateSheetRowTest(vals, shtIdx, shtTitle, ssId = spreadsheetId) 
   const retrier = new Retrier(options);
 
   let response = await retrier
-    .resolve(async attempt => fn)
+    .resolve(async attempt => fn(params, resource))
     .then(
       result => {console.log('result', result);return result},
       error =>  {console.log(error) ;return error}
