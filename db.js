@@ -7,6 +7,9 @@ const Retrier = class {
       this.opts.firstAttemptDelay = opts.firstAttemptDelay || 0;
       this.opts.reAuth = opts.reAuth || [401, 403];
       this.opts.quotaExceeded = opts.quotaExceeded || [408, 429];
+      this.opts.params = opts.params;
+      this.opts.resources = opts.resources;
+
   }
   resolve(fn) {
       this.fn = fn;
@@ -26,7 +29,7 @@ const Retrier = class {
       }
       setTimeout(async () => {
 
-        console.log('this.fb', this.fn())
+        console.log('this.fb', this.fn(this.opts.params, this.opts.resources))
         var promise
           var promise = this.fn();
 
@@ -334,18 +337,18 @@ async function clearSheetRangeTest(rng, sht, ssId = spreadsheetId) {
     range: "'" + sht + "'!" + rng
   };
 
-  const response = gapi.client.sheets.spreadsheets.values.clear(params)
-  // console.log('fn1', {...fn})
+  const fn = gapi.client.sheets.spreadsheets.values.clear
+  console.log('fn1', {...fn})
 
 
-  // const options = { limit: 5, delay: 2000};
-  // const retrier = new Retrier(options);
-  // let response = await retrier
-  //   .resolve(async attempt => fn)
-  //   .then(
-  //     result => {console.log(result);return result},
-  //     error =>  {console.log(error) ;return error}
-  //   );
+  const options = { limit: 5, delay: 2000, params: params};
+  const retrier = new Retrier(options);
+  let response = await retrier
+    .resolve(async attempt => fn)
+    .then(
+      result => {console.log(result);return result},
+      error =>  {console.log(error) ;return error}
+    );
     
                                             console.log('after gapi clearSheetRange')
 
@@ -576,20 +579,20 @@ async function updateSheetRowTest(vals, shtIdx, shtTitle, ssId = spreadsheetId) 
       valueInputOption: 'RAW'
     };
 
-    let response = gapi.client.sheets.spreadsheets.values.update(params, resource)
+    let fn = gapi.client.sheets.spreadsheets.values.update
 
-  // console.log('fn1', fn)
-  const options = { limit: 5, delay: 2000};
+  console.log('fn1', fn)
+  const options = { limit: 5, delay: 2000, params: params, resources: resources};
   const retrier = new Retrier(options);
 
-  // let response = await retrier
-  //   .resolve(async attempt => fn)
-  //   .then(
-  //     result => {console.log('result', result);return result},
-  //     error =>  {console.log(error) ;return error}
-  //   );
+  let response = await retrier
+    .resolve(async attempt => fn)
+    .then(
+      result => {console.log('result', result);return result},
+      error =>  {console.log(error) ;return error}
+    );
 
-  //   console.log('response', response)
+    console.log('response', response)
 
 
   return response
