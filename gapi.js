@@ -52,7 +52,6 @@ const Retrier = class {
     }
   }
   
-const getFName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
 
   //  database access
   
@@ -71,6 +70,9 @@ const getFName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
   }
   
   async function updateOption(key, val) { // **
+
+    const getFName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
+
 
     if (typeof val === "object") {
       var strVal = JSON.stringify(val)
@@ -113,7 +115,8 @@ const getFName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
   
   async function openShts(shts, ssId = spreadsheetId) { // **
   
-    var fName = getFName
+    const getFName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
+
 
     return new Promise(async resolve => {
   
@@ -182,6 +185,8 @@ const getFName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
   }
   
   async function getSheetRange(rng, sht, ssId = spreadsheetId) { // *
+    
+    const getFName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
 
     console.log('pre gapi', getfName)     
 
@@ -202,12 +207,14 @@ const getFName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
   
   async function clearSheetRange(rng, sht, ssId = spreadsheetId) { // **
     
+    const getFName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
+
     var params = {
       spreadsheetId: ssId, 
       range: "'" + sht + "'!" + rng
     };
   
-    console.log('before gapi clearSheetRange *')
+    console.log('pre gapi', getfName)     
 
     const options = { limit: 5, delay: 2000};
     const retrier = new Retrier(options);
@@ -218,7 +225,7 @@ const getFName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
         error =>  {console.log(error) ;return error}
       );
       
-    console.log('after gapi clearSheetRange *')
+      console.log('post gapi', getfName)     
   
     return response
   
@@ -350,7 +357,9 @@ const getFName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
   
   async function updateSheetRow(vals, shtIdx, shtTitle, ssId = spreadsheetId) { // *
   
-    console.log('before gapi updateSheetRow *')
+    const getFName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
+    
+    console.log('pre gapi', getfName)     
   
     var resource = {
       "majorDimension": "ROWS",
@@ -375,8 +384,7 @@ const getFName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
         error =>  {console.log(error) ;return error}
       );
   
-    console.log('after gapi updateSheetRow *')
-  
+      console.log('post gapi', getfName)     
   
     return response
   
