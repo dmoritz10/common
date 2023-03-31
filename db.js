@@ -320,7 +320,7 @@ async function clearSheetRangeTest(rng, sht, ssId = spreadsheetId) {
 
   var params = {
     spreadsheetId: ssId, 
-    range: "'" + sht + "'!" + rng + 'dan'
+    range: "'" + sht + "'!" + rng
   };
 
   const options = { limit: 5, delay: 2000};
