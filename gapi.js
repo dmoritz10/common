@@ -181,7 +181,7 @@ const getFName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
   
   }
   
-  async function getSheetRange(rng, sht, ssId = spreadsheetId) {
+  async function getSheetRange(rng, sht, ssId = spreadsheetId) { // *
 
     console.log('pre gapi', getfName())     
 
