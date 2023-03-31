@@ -624,22 +624,23 @@ const Retrier = class {
 
   }
   
-  async function getSheetId(shtTitle) {
-  
-    var sheets = await gapi.client.sheets.spreadsheets.get({
-          
-      spreadsheetId: spreadsheetId
+  async function getSheetId(shtTitle) { // *
+
+    const callerName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
+    console.log('pre gapi', callerName)     
     
-    }).then(function(response) {
-      
-      return response.result.sheets
+    const options = { limit: 5, delay: 2000};
+    const retrier = new Retrier(options);
+    let response = await retrier
+    .resolve(async attempt => gapi.client.sheets.spreadsheets.get({spreadsheetId: spreadsheetId}))
+    .then(
+        result => {console.log('result', result);return result},
+        error =>  {console.log(error) ;return error}
+    );
     
-    }, function(err) {
-      console.log('Error: ' + err.result.error.message);
-      return null
+    console.log('post gapi', callerName)  
   
-    });
-  
+    var sheets = response
   
     for (var j = 0; j < sheets.length; j++) {
   
@@ -740,7 +741,7 @@ const Retrier = class {
   
   }
   
-  async function createDriveFile() { // *
+  async function createDriveFile() { // **
   
     let resource = {                  
         name : 'Sheet',
@@ -766,7 +767,7 @@ const Retrier = class {
   
   }
   
-  async function deleteDriveFile(fileId) { // *
+  async function deleteDriveFile(fileId) { // **
  
     const callerName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
     console.log('pre gapi', callerName)     
@@ -786,7 +787,7 @@ const Retrier = class {
   
   }
   
-  async function renameDriveFile(fileId, fileName) { // *
+  async function renameDriveFile(fileId, fileName) { // **
 
     const callerName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
     console.log('pre gapi', callerName)     
