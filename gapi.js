@@ -56,7 +56,7 @@ const Retrier = class {
   
   //  Sheets
   
-  function readOption(key, defaultReturn = '') {
+  function readOption(key, defaultReturn = '') { // -
   
       if (!arrOptions[key]) return defaultReturn
       if (arrOptions[key] == 'null') return defaultReturn
@@ -68,8 +68,8 @@ const Retrier = class {
     
   }
   
-  async function updateOption(key, val) {
-  
+  async function updateOption(key, val) { // *
+
     if (typeof val === "object") {
       var strVal = JSON.stringify(val)
     } else {
@@ -93,41 +93,19 @@ const Retrier = class {
       range: "'Settings'!A" + row + ":B" + row,
       valueInputOption: 'RAW'
     };
+
+    console.log('before gapi updateOption *')
   
-    let response = await gapi.client.sheets.spreadsheets.values.update(params, resource)
-      .then(async response => {               console.log('gapi updateOption first try', response)
-          
-          return response})
+    const options = { limit: 5, delay: 2000};
+    const retrier = new Retrier(options);
+    let response = await retrier
+      .resolve(async attempt => gapi.client.sheets.spreadsheets.values.update(params, resource))
+      .then(
+        result => {console.log('result', result);return result},
+        error =>  {console.log(error) ;return error}
+      );
   
-      .catch(async err  => {                  console.log('gapi updateOption catch', err)
-          
-          if (err.result.error.code == 401 || err.result.error.code == 403) {
-              await Goth.token()              // for authorization errors obtain an access token
-              let retryResponse = await gapi.client.sheets.spreadsheets.values.update(params, resource)
-                  .then(async retry => {      console.log('gapi updateOption retry', retry) 
-                      
-                      return retry})
-  
-                  .catch(err  => {            console.log('gapi updateOption error2', err)
-                      
-                      bootbox.alert('gapi updateOption error: ' + err.result.error.code + ' - ' + err.result.error.message);
-  
-                      return null });         // cancelled by user, timeout, etc.
-  
-              return retryResponse
-  
-          } else {
-              
-              console.log('error updating option "' + key + '": ' + err.result.error.message);
-              bootbox.alert('error updating option "' + key + '": ' + err.result.error.message);
-  
-              return null
-  
-          }
-              
-      })
-      
-                                              console.log('after gapi updateOption')      
+    console.log('after gapi updateOption *')     
   
   }
   
@@ -155,40 +133,19 @@ const Retrier = class {
         }
   
       }
+
+      console.log('before gapi updateOption *')
   
-      let response = await gapi.client.sheets.spreadsheets.values.batchGet({spreadsheetId: ssId, ranges: shtRngs})
-        .then(async response => {               console.log('gapi openShts first try', response)
-            
-            return response})
-  
-        .catch(async err  => {                  console.log('gapi openShts catch', err)
-            
-            if (err.result.error.code == 401 || err.result.error.code == 403) {
-                await Goth.token()              // for authorization errors obtain an access token
-                let retryResponse = await gapi.client.sheets.spreadsheets.values.batchGet({spreadsheetId: ssId, ranges: shtRngs})
-                    .then(async retry => {      console.log('gapi openShts retry', retry) 
-                        
-                        return retry})
-  
-                    .catch(err  => {            console.log('gapi openShts error2', err)
-                        
-                        bootbox.alert('gapi openShts error: ' + err.result.error.code + ' - ' + err.result.error.message);
-  
-                        return null });         // cancelled by user, timeout, etc.
-  
-                return retryResponse
-  
-            } else {
-                
-                bootbox.alert('gapi openShts error: ' + shtTitle + ' - ' + err.result.error.message);
-                return null
-  
-            }
-                
-        })
-        
-                                                console.log('after gapi openShts')
-  
+      const options = { limit: 5, delay: 2000};
+      const retrier = new Retrier(options);
+      let response = await retrier
+        .resolve(async attempt => gapi.client.sheets.spreadsheets.values.batchGet({spreadsheetId: ssId, ranges: shtRngs}))
+        .then(
+          result => {console.log('result', result);return result},
+          error =>  {console.log(error) ;return error}
+        );
+    
+      console.log('after gapi updateOption *')     
   
       var allShts = response.result.valueRanges
   
@@ -263,14 +220,14 @@ const Retrier = class {
   }
   
   async function clearSheetRange(rng, sht, ssId = spreadsheetId) { // *
-  
-    console.log('before gapi clearSheetRange *')
-  
+    
     var params = {
       spreadsheetId: ssId, 
       range: "'" + sht + "'!" + rng
     };
   
+    console.log('before gapi clearSheetRange *')
+
     const options = { limit: 5, delay: 2000};
     const retrier = new Retrier(options);
     let response = await retrier
@@ -428,7 +385,7 @@ const Retrier = class {
       valueInputOption: 'RAW'
     };
       
-    const options = { limit: 5, delay: 2000, params: params, resource: resource};
+    const options = { limit: 5, delay: 2000};
     const retrier = new Retrier(options);
     let response = await retrier
       .resolve(async attempt => gapi.client.sheets.spreadsheets.values.update(params, resource))
