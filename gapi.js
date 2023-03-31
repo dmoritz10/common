@@ -140,7 +140,7 @@ const Retrier = class {
   
       }
 
-      console.log('pre gapi ', callerName)     
+      console.log('pre gapi', callerName)     
 
       const options = { limit: 5, delay: 2000};
       const retrier = new Retrier(options);
@@ -151,7 +151,7 @@ const Retrier = class {
           error =>  {console.log(error) ;return error}
         );
     
-      console.log('post gapi ', callerName)     
+      console.log('post gapi', callerName)     
   
       var allShts = response.result.valueRanges
   
@@ -184,7 +184,7 @@ const Retrier = class {
   
   }
   
-  async function getSheetRange(rng, sht, ssId = spreadsheetId) { // *
+  async function getSheetRange(rng, sht, ssId = spreadsheetId) { // **
     
     const callerName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
 
@@ -206,14 +206,13 @@ const Retrier = class {
   }
   
   async function clearSheetRange(rng, sht, ssId = spreadsheetId) { // **
-    
-    const callerName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
 
     var params = {
       spreadsheetId: ssId, 
       range: "'" + sht + "'!" + rng
     };
   
+    const callerName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
     console.log('pre gapi', callerName)     
 
     const options = { limit: 5, delay: 2000};
@@ -225,7 +224,7 @@ const Retrier = class {
         error =>  {console.log(error) ;return error}
       );
       
-      console.log('post gapi', callerName)     
+    console.log('post gapi', callerName)     
   
     return response
   
@@ -355,11 +354,7 @@ const Retrier = class {
   
   } 
   
-  async function updateSheetRow(vals, shtIdx, shtTitle, ssId = spreadsheetId) { // *
-  
-    const callerName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
-    
-    console.log('pre gapi', callerName)     
+  async function updateSheetRow(vals, shtIdx, shtTitle, ssId = spreadsheetId) { // **
   
     var resource = {
       "majorDimension": "ROWS",
@@ -374,6 +369,9 @@ const Retrier = class {
       range: "'" + shtTitle + "'!" + rng,
       valueInputOption: 'RAW'
     };
+
+    const callerName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
+    console.log('pre gapi', callerName)     
       
     const options = { limit: 5, delay: 2000};
     const retrier = new Retrier(options);
@@ -384,7 +382,7 @@ const Retrier = class {
         error =>  {console.log(error) ;return error}
       );
   
-      console.log('post gapi', callerName)     
+    console.log('post gapi', callerName)     
   
     return response
   
@@ -715,43 +713,22 @@ const Retrier = class {
   
   }
   
-  async function getSheets() {
+  async function getSheets() { // *
   
-    let response = await gapi.client.sheets.spreadsheets.get({spreadsheetId: spreadsheetId})
-          .then(async response => {               console.log('gapi getSheets first try', response)
-              
-              return response})
+    const callerName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
+    console.log('pre gapi', callerName)     
+      
+    const options = { limit: 5, delay: 2000};
+    const retrier = new Retrier(options);
+    let response = await retrier
+      .resolve(async attempt => gapi.client.sheets.spreadsheets.get({spreadsheetId: spreadsheetId}))
+      .then(
+        result => {console.log('result', result);return result},
+        error =>  {console.log(error) ;return error}
+      );
   
-          .catch(async err  => {                  console.log('gapi getSheets catch', err)
-              
-              if (err.result.error.code == 401 || err.result.error.code == 403) {
-                  await Goth.token()              // for authorization errors obtain an access token
-                  let retryResponse = gapi.client.sheets.spreadsheets.get({spreadsheetId: spreadsheetId})
-                      .then(async retry => {      console.log('gapi getSheets retry', retry) 
-                          
-                          return retry})
-  
-                      .catch(err  => {            console.log('gapi getSheets error2', err)
-                          
-                          bootbox.alert('gapi getSheets error: ' + err.result.error.code + ' - ' + err.result.error.message);
-  
-                          return null });         // cancelled by user, timeout, etc.
-  
-                  return retryResponse
-  
-              } else {
-                  
-                  bootbox.alert('gapi getSheets error: ' + shtTitle + ' - ' + err.result.error.message);
-                  return null
-  
-              }
-                  
-          })
-          
-                                                  console.log('after gapi getSheets')
-    
-          return response
-  
+    console.log('post gapi', callerName)  
+
   }
   
   async function getSheetId(shtTitle) {
