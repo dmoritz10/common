@@ -31,7 +31,7 @@ const Retrier = class {
 
         console.log('this.fb', this.fn(this.opts.params, this.opts.resources))
         var promise
-          var promise = this.fn();
+          var promise = this.fn(this.opts.params, this.opts.resources);
 
           console.log('promise', promise)
 
