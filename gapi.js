@@ -137,7 +137,8 @@ const Retrier = class {
       }
 
       console.log('before gapi openShts *')
-      console.log('before gapi ', this.constructor.name)     
+      console.log(new Error().stack.split(/\r\n|\r|\n/g)[1].trim());
+   
   
       const options = { limit: 5, delay: 2000};
       const retrier = new Retrier(options);
