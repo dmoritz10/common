@@ -695,7 +695,7 @@ const Retrier = class {
   
   //  Drive
   
-  async function listDriveFiles(sheetName) {
+  async function listDriveFiles(sheetName) { // **
   
     let q = "name = '" + sheetName +
                         "' AND " + "mimeType='application/vnd.google-apps.spreadsheet'" +
@@ -740,127 +740,67 @@ const Retrier = class {
   
   }
   
-  async function createDriveFile() {
+  async function createDriveFile() { // *
   
     let resource = {                  
         name : 'Sheet',
         mimeType: 'application/vnd.google-apps.spreadsheet',
         parents: ['1eAwbR_yzsEaEpBEpFA0Pqp8KGP2XszDY']
       }
-  
-    let response = await gapi.client.drive.files.create({resource: resource})
-  
-      .then(async response => {               console.log('gapi createDriveFile first try', response)
-          
-          return response})
-  
-      .catch(async err  => {                  console.log('gapi createDriveFile catch', err)
-          
-          if (err.result.error.code == 401 || err.result.error.code == 403) {
-              await Goth.token()              // for authorization errors obtain an access token
-              let retryResponse = await gapi.client.drive.files.create({resource: resource})
-                  .then(async retry => {      console.log('gapi createDriveFile retry', retry) 
-                      
-                      return retry})
-  
-                  .catch(err  => {            console.log('gapi createDriveFile error2', err)
-                      
-                      bootbox.alert('gapi createDriveFile error: ' + err.result.error.code + ' - ' + err.result.error.message);
-  
-                      return null });         // cancelled by user, timeout, etc.
-  
-              return retryResponse
-  
-          } else {
-              
-              bootbox.alert('gapi createDriveFile error: ' +  err.result.error.message);
-              return null
-  
-          }
-              
-      })
-          
-                                                  console.log('after gapi')
+
+    const callerName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
+    console.log('pre gapi', callerName)     
+    
+    const options = { limit: 5, delay: 2000, quotaExceeded: [429, 403]};
+    const retrier = new Retrier(options);
+    let response = await retrier
+    .resolve(async attempt => gapi.client.drive.files.create({resource: resource}))
+    .then(
+        result => {console.log('result', result);return result},
+        error =>  {console.log(error) ;return error}
+    );
+    
+    console.log('post gapi', callerName)  
     
     return response
   
   }
   
-  async function deleteDriveFile(fileId) {
-  
-    let response = await gapi.client.drive.files.delete({fileId : fileId})
-  
-      .then(async response => {               console.log('gapi deleteDriveFile first try', response)
-          
-          return response})
-  
-      .catch(async err  => {                  console.log('gapi deleteDriveFile catch', err)
-          
-          if (err.result.error.code == 401 || err.result.error.code == 403) {
-              await Goth.token()              // for authorization errors obtain an access token
-              let retryResponse = await gapi.client.drive.files.delete({fileId : fileId})
-                  .then(async retry => {      console.log('gapi deleteDriveFile retry', retry) 
-                      
-                      return retry})
-  
-                  .catch(err  => {            console.log('gapi deleteDriveFile error2', err)
-                      
-                      bootbox.alert('gapi listDriveFiles error: ' + err.result.error.code + ' - ' + err.result.error.message);
-  
-                      return null });         // cancelled by user, timeout, etc.
-  
-              return retryResponse
-  
-          } else {
-              
-              bootbox.alert('gapi deleteDriveFile error: ' + shtTitle + ' - ' + err.result.error.message);
-              return null
-  
-          }
-              
-      })
-          
-                                                  console.log('after gapi')
+  async function deleteDriveFile(fileId) { // *
+ 
+    const callerName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
+    console.log('pre gapi', callerName)     
+    
+    const options = { limit: 5, delay: 2000, quotaExceeded: [429, 403]};
+    const retrier = new Retrier(options);
+    let response = await retrier
+    .resolve(async attempt => gapi.client.drive.files.delete({fileId : fileId}))
+    .then(
+        result => {console.log('result', result);return result},
+        error =>  {console.log(error) ;return error}
+    );
+    
+    console.log('post gapi', callerName)  
     
     return response
   
   }
   
-  async function renameDriveFile(fileId, fileName) {
-  
-    let response = await gapi.client.drive.files.update({fileId : fileId, resource: { name: fileName}})
-  
-      .then(async response => {               console.log('gapi renameDriveFile first try', response)
-          
-          return response})
-  
-      .catch(async err  => {                  console.log('gapi renameDriveFile catch', err)
-          
-          if (err.result.error.code == 401 || err.result.error.code == 403) {
-              await Goth.token()              // for authorization errors obtain an access token
-              let retryResponse = await gapi.client.drive.files.update({fileId : fileId, resource: { name: fileName}})
-                  .then(async retry => {      console.log('gapi renameDriveFile retry', retry) 
-                      
-                      return retry})
-  
-                  .catch(err  => {            console.log('gapi renameDriveFile error2', err)
-                      
-                      bootbox.alert('gapi renameDriveFile error: ' + err.result.error.code + ' - ' + err.result.error.message);
-  
-                      return null });         // cancelled by user, timeout, etc.
-  
-              return retryResponse
-  
-          } else {
-              
-              bootbox.alert('gapi renameDriveFile error: ' + err.result.error.message);
-              return null
-  
-          }
-              
-      })
-          
-                                                  console.log('after gapi')
+  async function renameDriveFile(fileId, fileName) { // *
+
+    const callerName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
+    console.log('pre gapi', callerName)     
+    
+    const options = { limit: 5, delay: 2000, quotaExceeded: [429, 403]};
+    const retrier = new Retrier(options);
+    let response = await retrier
+    .resolve(async attempt => gapi.client.drive.files.update({fileId : fileId, resource: { name: fileName}}))
+    .then(
+        result => {console.log('result', result);return result},
+        error =>  {console.log(error) ;return error}
+    );
+    
+    console.log('post gapi', callerName)  
     
     return response
   
