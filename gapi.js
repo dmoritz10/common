@@ -264,7 +264,7 @@ const Retrier = class {
   
   async function clearSheetRange(rng, sht, ssId = spreadsheetId) { // *
   
-    console.log('before gapi clearSheetRange')
+    console.log('before gapi clearSheetRange *')
   
     var params = {
       spreadsheetId: ssId, 
@@ -280,7 +280,7 @@ const Retrier = class {
         error =>  {console.log(error) ;return error}
       );
       
-    console.log('after gapi clearSheetRange')
+    console.log('after gapi clearSheetRange *')
   
     return response
   
@@ -412,7 +412,7 @@ const Retrier = class {
   
   async function updateSheetRow(vals, shtIdx, shtTitle, ssId = spreadsheetId) { // *
   
-    console.log('before gapi updateSheetRow')
+    console.log('before gapi updateSheetRow *')
   
     var resource = {
       "majorDimension": "ROWS",
@@ -437,7 +437,7 @@ const Retrier = class {
         error =>  {console.log(error) ;return error}
       );
   
-    console.log('after gapi updateSheetRow')
+    console.log('after gapi updateSheetRow *')
   
   
     return response
