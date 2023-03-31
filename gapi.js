@@ -109,7 +109,9 @@ const Retrier = class {
         error =>  {console.log(error) ;return error}
       );
   
-      console.log('post gapi', callerName)      
+    console.log('post gapi', callerName)    
+      
+    return response
   
   }
   
@@ -728,6 +730,8 @@ const Retrier = class {
       );
   
     console.log('post gapi', callerName)  
+
+    return response
 
   }
   
