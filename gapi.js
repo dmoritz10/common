@@ -188,7 +188,7 @@ const getFName = () => new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" 
     const options = { limit: 5, delay: 2000};
     const retrier = new Retrier(options);
     let response = await retrier
-      .resolve(async attempt => gapi.client.sheets.spreadsheets.values.batchGet({spreadsheetId: ssId, ranges: ["'" + sht + "'!" + rng]})
+      .resolve(async attempt => gapi.client.sheets.spreadsheets.values.batchGet({spreadsheetId: ssId, ranges: ["'" + sht + "'!" + rng]}))
       .then(
         result => {console.log('result', result);return result},
         error =>  {console.log(error) ;return error}
