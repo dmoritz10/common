@@ -71,7 +71,7 @@ const Retrier = class {
   
   async function updateOption(key, val) { // **
 
-    const getFName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
+    const callerName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
 
 
     if (typeof val === "object") {
@@ -98,7 +98,7 @@ const Retrier = class {
       valueInputOption: 'RAW'
     };
 
-    console.log('pre gapi', getfName) 
+    console.log('pre gapi', callerName) 
   
     const options = { limit: 5, delay: 2000};
     const retrier = new Retrier(options);
@@ -109,13 +109,13 @@ const Retrier = class {
         error =>  {console.log(error) ;return error}
       );
   
-      console.log('post gapi', getfName)      
+      console.log('post gapi', callerName)      
   
   }
   
   async function openShts(shts, ssId = spreadsheetId) { // **
   
-    const getFName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
+    const callerName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
 
 
     return new Promise(async resolve => {
@@ -140,7 +140,7 @@ const Retrier = class {
   
       }
 
-      console.log('pre gapi ', fName)     
+      console.log('pre gapi ', callerName)     
 
       const options = { limit: 5, delay: 2000};
       const retrier = new Retrier(options);
@@ -151,7 +151,7 @@ const Retrier = class {
           error =>  {console.log(error) ;return error}
         );
     
-      console.log('post gapi ', fName)     
+      console.log('post gapi ', callerName)     
   
       var allShts = response.result.valueRanges
   
@@ -186,9 +186,9 @@ const Retrier = class {
   
   async function getSheetRange(rng, sht, ssId = spreadsheetId) { // *
     
-    const getFName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
+    const callerName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
 
-    console.log('pre gapi', getfName)     
+    console.log('pre gapi', callerName)     
 
     const options = { limit: 5, delay: 2000};
     const retrier = new Retrier(options);
@@ -199,7 +199,7 @@ const Retrier = class {
         error =>  {console.log(error) ;return error}
       );
   
-    console.log('post gapi',  getfName)       
+    console.log('post gapi',  callerName)       
 
     return response
   
@@ -207,14 +207,14 @@ const Retrier = class {
   
   async function clearSheetRange(rng, sht, ssId = spreadsheetId) { // **
     
-    const getFName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
+    const callerName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
 
     var params = {
       spreadsheetId: ssId, 
       range: "'" + sht + "'!" + rng
     };
   
-    console.log('pre gapi', getfName)     
+    console.log('pre gapi', callerName)     
 
     const options = { limit: 5, delay: 2000};
     const retrier = new Retrier(options);
@@ -225,7 +225,7 @@ const Retrier = class {
         error =>  {console.log(error) ;return error}
       );
       
-      console.log('post gapi', getfName)     
+      console.log('post gapi', callerName)     
   
     return response
   
@@ -357,9 +357,9 @@ const Retrier = class {
   
   async function updateSheetRow(vals, shtIdx, shtTitle, ssId = spreadsheetId) { // *
   
-    const getFName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
+    const callerName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
     
-    console.log('pre gapi', getfName)     
+    console.log('pre gapi', callerName)     
   
     var resource = {
       "majorDimension": "ROWS",
@@ -384,7 +384,7 @@ const Retrier = class {
         error =>  {console.log(error) ;return error}
       );
   
-      console.log('post gapi', getfName)     
+      console.log('post gapi', callerName)     
   
     return response
   
