@@ -52,6 +52,8 @@ const Retrier = class {
     }
   }
   
+const getFName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
+
   //  database access
   
   //  Sheets
@@ -109,16 +111,10 @@ const Retrier = class {
   
   }
   
-  async function openShts(shts, ssId = spreadsheetId) { // *
+  async function openShts(shts, ssId = spreadsheetId) { // **
   
-    console.log('before gapixxx ', this.constructor.name)     
-    var x = new Error().stack.split(/\r\n|\r|\n/g)[1].trim()
-    console.log('x', x)
-    var y = x.split(" ")
-    var z = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")
+    var fName = getFName()
 
-    console.log('yz', y, z)
-  
     return new Promise(async resolve => {
   
       shtRngs = []
@@ -141,10 +137,8 @@ const Retrier = class {
   
       }
 
-      console.log('before gapi openShts *')
-      console.log(new Error().stack.split(/\r\n|\r|\n/g)[1].trim());
-   
-  
+      console.log('pre gapi ', fName)     
+
       const options = { limit: 5, delay: 2000};
       const retrier = new Retrier(options);
       let response = await retrier
@@ -154,7 +148,7 @@ const Retrier = class {
           error =>  {console.log(error) ;return error}
         );
     
-      console.log('after gapi ', this.constructor.name)     
+      console.log('post gapi ', fName)     
   
       var allShts = response.result.valueRanges
   
