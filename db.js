@@ -315,11 +315,12 @@ return response
 
 async function clearSheetRangeTest(rng, sht, ssId = spreadsheetId) {
 
-  await writeThrottle(1)
+  console.log('before gapi clearSheetRange')
+
 
   var params = {
     spreadsheetId: ssId, 
-    range: "'" + sht + "'!" + rng
+    range: "'" + sht + "'!" + rng + 'dan'
   };
 
   const options = { limit: 5, delay: 2000};
@@ -544,6 +545,8 @@ async function updateSheetTest(title, vals) {
 
 async function updateSheetRowTest(vals, shtIdx, shtTitle, ssId = spreadsheetId) {
 
+  console.log('before gapi updateSheetRowTest')
+
   var resource = {
     "majorDimension": "ROWS",
     "values": [vals]    
@@ -557,7 +560,7 @@ async function updateSheetRowTest(vals, shtIdx, shtTitle, ssId = spreadsheetId) 
   var params = {
     spreadsheetId: ssId,
     range: "'" + shtTitle + "'!" + rng,
-    valueInputOption: 'xxx'
+    valueInputOption: 'RAW'
   };
 
     
@@ -570,6 +573,9 @@ async function updateSheetRowTest(vals, shtIdx, shtTitle, ssId = spreadsheetId) 
       result => {console.log('result', result);return result},
       error =>  {console.log(error) ;return error}
     );
+
+  console.log('after gapi updateSheetRowTest')
+
 
   return response
 
