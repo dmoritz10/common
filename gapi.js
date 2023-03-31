@@ -183,7 +183,7 @@ const getFName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
   
   async function getSheetRange(rng, sht, ssId = spreadsheetId) { // *
 
-    console.log('pre gapi', getfName())     
+    console.log('pre gapi', getfName)     
 
     const options = { limit: 5, delay: 2000};
     const retrier = new Retrier(options);
@@ -194,7 +194,7 @@ const getFName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
         error =>  {console.log(error) ;return error}
       );
   
-    console.log('post gapi',  getfName())       
+    console.log('post gapi',  getfName)       
 
     return response
   
