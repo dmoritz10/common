@@ -334,18 +334,18 @@ async function clearSheetRangeTest(rng, sht, ssId = spreadsheetId) {
     range: "'" + sht + "'!" + rng
   };
 
-  const fn = gapi.client.sheets.spreadsheets.values.clear(params)
+  const response = gapi.client.sheets.spreadsheets.values.clear(params)
   console.log('fn1', {...fn})
 
 
-  const options = { limit: 5, delay: 2000};
-  const retrier = new Retrier(options);
-  let response = await retrier
-    .resolve(async attempt => fn)
-    .then(
-      result => {console.log(result);return result},
-      error =>  {console.log(error) ;return error}
-    );
+  // const options = { limit: 5, delay: 2000};
+  // const retrier = new Retrier(options);
+  // let response = await retrier
+  //   .resolve(async attempt => fn)
+  //   .then(
+  //     result => {console.log(result);return result},
+  //     error =>  {console.log(error) ;return error}
+  //   );
     
                                             console.log('after gapi clearSheetRange')
 
@@ -576,20 +576,20 @@ async function updateSheetRowTest(vals, shtIdx, shtTitle, ssId = spreadsheetId) 
       valueInputOption: 'RAW'
     };
 
-    let fn = gapi.client.sheets.spreadsheets.values.update(params, resource)
+    let response = gapi.client.sheets.spreadsheets.values.update(params, resource)
 
   console.log('fn1', fn)
   const options = { limit: 5, delay: 2000};
   const retrier = new Retrier(options);
 
-  let response = await retrier
-    .resolve(async attempt => fn)
-    .then(
-      result => {console.log('result', result);return result},
-      error =>  {console.log(error) ;return error}
-    );
+  // let response = await retrier
+  //   .resolve(async attempt => fn)
+  //   .then(
+  //     result => {console.log('result', result);return result},
+  //     error =>  {console.log(error) ;return error}
+  //   );
 
-    console.log('response', response)
+  //   console.log('response', response)
 
 
   return response
