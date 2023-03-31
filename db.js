@@ -8,7 +8,7 @@ const Retrier = class {
       this.opts.reAuth = opts.reAuth || [401, 403];
       this.opts.quotaExceeded = opts.quotaExceeded || [408, 429];
       this.opts.params = opts.params;
-      this.opts.resources = opts.resources;
+      this.opts.resource = opts.resource;
 
   }
   resolve(fn) {
@@ -29,9 +29,9 @@ const Retrier = class {
       }
       setTimeout(async () => {
 
-        console.log('this.fb', this.fn(this.opts.params, this.opts.resources))
+        console.log('this.fb', this.fn(this.opts.params, this.opts.resource))
         var promise
-          var promise = this.fn(this.opts.params, this.opts.resources);
+          var promise = this.fn(this.opts.params, this.opts.resource);
 
           console.log('promise', promise)
 
@@ -582,7 +582,7 @@ async function updateSheetRowTest(vals, shtIdx, shtTitle, ssId = spreadsheetId) 
     let fn = gapi.client.sheets.spreadsheets.values.update
 
   console.log('fn1', fn)
-  const options = { limit: 5, delay: 2000, params: params, resources: resources};
+  const options = { limit: 5, delay: 2000, params: params, resource: resource};
   const retrier = new Retrier(options);
 
   let response = await retrier
