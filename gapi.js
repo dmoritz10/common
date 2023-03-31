@@ -109,7 +109,7 @@ const Retrier = class {
   
   }
   
-  async function openShts(shts, ssId = spreadsheetId) {
+  async function openShts(shts, ssId = spreadsheetId) { // *
   
   
     return new Promise(async resolve => {
@@ -134,7 +134,7 @@ const Retrier = class {
   
       }
 
-      console.log('before gapi updateOption *')
+      console.log('before gapi openShts *')
   
       const options = { limit: 5, delay: 2000};
       const retrier = new Retrier(options);
@@ -145,7 +145,7 @@ const Retrier = class {
           error =>  {console.log(error) ;return error}
         );
     
-      console.log('after gapi updateOption *')     
+      console.log('after gapi openShts *')     
   
       var allShts = response.result.valueRanges
   
