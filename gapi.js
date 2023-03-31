@@ -252,14 +252,14 @@ const Retrier = class {
   
   }
   
-  async function updateSheet(title, vals) {
+  async function updateSheet(title, vals) { // *
   
     var nbrRows = vals.length
     var maxRows = 5000
     var strtRow = 0
     var currRow = 0
   
-    var promiseArr = []
+    // var promiseArr = []
     var responseArr = []
   
     while (vals.length > 0) {
@@ -776,153 +776,61 @@ const Retrier = class {
   
   //  Calendar
   
-  async function updateCalendarEvent(eventId, event) {
+  async function updateCalendarEvent(eventId, event) { // *
   
-    await writeThrottle(1)
-  
-    var response = await gapi.client.calendar.events.update({
-                                            'calendarId': 'primary',
-                                            'eventId': eventId,
-                                            'resource': event
-                                          })
-      .then(async response => {               console.log('gapi updateCalendarEvent first try', response)
-          
-          return response})
-  
-      .catch(async err  => {                  console.log('gapi updateCalendarEvent catch', err)
-          
-          if (err.result.error.code == 401 || err.result.error.code == 403) {
-              await Goth.token()              // for authorization errors obtain an access token
-              let retryResponse = await gapi.client.calendar.events.update({
-                                          'calendarId': 'primary',
-                                          'eventId': eventId,
-                                          'resource': event
-                                        })
-                  .then(async retry => {      console.log('gapi updateCalendarEvent retry', retry) 
-                      
-                      return retry})
-  
-                  .catch(err  => {            console.log('gapi updateCalendarEvent error2', err)
-                      
-                      bootbox.alert('gapi batchUpdateSheet error: ' + err.result.error.code + ' - ' + err.result.error.message);
-  
-                      return null });         // cancelled by user, timeout, etc.
-  
-              return retryResponse
-  
-          } else {
-              
-            console.error('error updating event'  + '": ' + err.result.error.message);
-            bootbox.alert('error updating event'  + '": ' + err.result.error.message);
-  
-              return null
-  
-          }
-              
-      })
-      
-                                              console.log('after gapi updateCalendarEvent')
-  
-    return response
+    const options = { limit: 5, delay: 2000, quotaExceeded: [429, 403]};
+    const retrier = new Retrier(options);
+    let response = await retrier
+    .resolve(async attempt => gapi.client.calendar.events.update({
+                                    'calendarId': 'primary',
+                                    'eventId': eventId,
+                                    'resource': event}))
+    .then(
+        result => {console.log('result', result);return result},
+        error =>  {console.log(error) ;return error}
+    );
+    
+    console.log('post gapi', callerName)  
+                    
+    return response 
   
   }
   
-  async function insertCalendarEvent(event) {
+  async function insertCalendarEvent(event) { // *
   
-    await writeThrottle(1)
-  
-    var response = await gapi.client.calendar.events.insert({
-                                            'calendarId': 'primary',
-                                            'resource': event
-                                          })
-      .then(async response => {               console.log('gapi insertCalendarEvent first try', response)
-          
-          return response})
-  
-      .catch(async err  => {                  console.log('gapi insertCalendarEvent catch', err)
-          
-          if (err.result.error.code == 401 || err.result.error.code == 403) {
-              await Goth.token()              // for authorization errors obtain an access token
-              let retryResponse = await gapi.client.calendar.events.insert({
-                                          'calendarId': 'primary',
-                                          'resource': event
-                                        })
-                  .then(async retry => {      console.log('gapi insertCalendarEvent retry', retry) 
-                      
-                      return retry})
-  
-                  .catch(err  => {            console.log('gapi insertCalendarEvent error2', err)
-                      
-                      bootbox.alert('gapi batchUpdateSheet error: ' + err.result.error.code + ' - ' + err.result.error.message);
-  
-                      return null });         // cancelled by user, timeout, etc.
-  
-              return retryResponse
-  
-          } else {
-              
-            console.error('error updating event'  + '": ' + err.result.error.message);
-            bootbox.alert('error updating event'  + '": ' + err.result.error.message);
-  
-              return null
-  
-          }
-              
-      })
-      
-                                              console.log('after gapi insertCalendarEvent')
-  
-    return response
-  
+    const options = { limit: 5, delay: 2000, quotaExceeded: [429, 403]};
+    const retrier = new Retrier(options);
+    let response = await retrier
+    .resolve(async attempt => gapi.client.calendar.events.insert({
+                            'calendarId': 'primary',
+                            'resource': BeforeUnloadEvent}))
+    .then(
+        result => {console.log('result', result);return result},
+        error =>  {console.log(error) ;return error}
+    );
+    
+    console.log('post gapi', callerName)  
+                    
+    return response  
+    
   }
   
-  async function deleteCalendarEvent(eventId) {
+  async function deleteCalendarEvent(eventId) { // *
   
-    await writeThrottle(1)
-  
-    var response = await gapi.client.calendar.events.delete({
-                                            'calendarId': 'primary',
-                                            'eventId': eventId
-                                          })
-      .then(async response => {               console.log('gapi deleteCalendarEvent first try', response)
-          
-          return response})
-  
-      .catch(async err  => {                  console.log('gapi deleteCalendarEvent catch', err)
-          
-          if (err.result.error.code == 401 || err.result.error.code == 403) {
-              await Goth.token()              // for authorization errors obtain an access token
-              let retryResponse = await gapi.client.calendar.events.delete({
-                                          'calendarId': 'primary',
-                                          'eventId': eventId
-                                        })
-                  .then(async retry => {      console.log('gapi deleteCalendarEvent retry', retry) 
-                      
-                      return retry})
-  
-                  .catch(err  => {            console.log('gapi deleteCalendarEvent error2', err)
-                      
-                      bootbox.alert('gapi batchUpdateSheet error: ' + err.result.error.code + ' - ' + err.result.error.message);
-  
-                      return null });         // cancelled by user, timeout, etc.
-  
-              return retryResponse
-  
-          } else {
-              
-            console.error('error updating event'  + '": ' + err.result.error.message);
-            bootbox.alert('error updating event'  + '": ' + err.result.error.message);
-  
-              return null
-  
-          }
-              
-      })
-      
-                                              console.log('after gapi deleteCalendarEvent')
-  
-    return response
-  
-  
+    const options = { limit: 5, delay: 2000, quotaExceeded: [429, 403]};
+    const retrier = new Retrier(options);
+    let response = await retrier
+    .resolve(async attempt => await gapi.client.calendar.events.delete({
+                                'calendarId': 'primary',
+                                'eventId': eventId}))
+    .then(
+        result => {console.log('result', result);return result},
+        error =>  {console.log(error) ;return error}
+    );
+    
+    console.log('post gapi', callerName)  
+                    
+    return response  
+   
   }
   
