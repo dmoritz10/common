@@ -7,14 +7,9 @@ const Retrier = class {
       this.opts.firstAttemptDelay = opts.firstAttemptDelay || 0;
       this.opts.reAuth = opts.reAuth || [401, 403];
       this.opts.quotaExceeded = opts.quotaExceeded || [408, 429];
-      this.opts.params = opts.params;
-      this.opts.resource = opts.resource;
-
   }
   resolve(fn) {
       this.fn = fn;
-
-      console.log('resolve fn', { ...fn })
       return new Promise((resolve, reject) => {
           this._resolve = resolve;
           this._reject = reject;
@@ -29,25 +24,15 @@ const Retrier = class {
       }
       setTimeout(async () => {
 
-        // console.log('this.fb', this.fn())
-        var promise
           var promise = this.fn();
-
-          console.log('promise', promise)
 
           if (!(promise instanceof Promise)) {
               // TODO: throw error in contructor if params aren't valid
               return this._reject(new Error('Expecting function which returns promise!'));
           }
           promise.then(response => {
-            console.log('promise 123', promise)
-              console.log('then', response.status, this.attempt, this.opts.limit, 2 ** this.attempt * this.opts.delay)
-
               this._resolve(response);
           }).catch( async error => {
-            console.log('promise 456', JSON.parse(JSON.stringify(promise)))
-              console.log('error', error.status, this.attempt, this.opts.limit, 2 ** this.attempt * this.opts.delay)
-
               if (this.opts.reAuth.indexOf(error.status) > -1) {
                 console.log('if', error)
                 await Goth.token()              // for authorization errors obtain an access token
@@ -337,11 +322,7 @@ async function clearSheetRangeTest(rng, sht, ssId = spreadsheetId) {
     range: "'" + sht + "'!" + rng
   };
 
-  const fn = gapi.client.sheets.spreadsheets.values.clear
-  console.log('fn1', {...fn})
-
-
-  const options = { limit: 5, delay: 2000, params: params};
+  const options = { limit: 5, delay: 2000};
   const retrier = new Retrier(options);
   let response = await retrier
     .resolve(async attempt => gapi.client.sheets.spreadsheets.values.clear(params))
@@ -350,9 +331,9 @@ async function clearSheetRangeTest(rng, sht, ssId = spreadsheetId) {
       error =>  {console.log(error) ;return error}
     );
     
-                                            console.log('after gapi clearSheetRange')
+  console.log('after gapi clearSheetRange')
 
-return response
+  return response
 
 }
 
@@ -568,20 +549,18 @@ async function updateSheetRowTest(vals, shtIdx, shtTitle, ssId = spreadsheetId) 
     "values": [vals]    
   }
 
-    console.log('update', shtIdx)
+  console.log('update', shtIdx)
 
-    var row = shtIdx
-    var rng = calcRngA1(row, 1, 1, vals.length)
+  var row = shtIdx
+  var rng = calcRngA1(row, 1, 1, vals.length)
 
-    var params = {
-      spreadsheetId: ssId,
-      range: "'" + shtTitle + "'!" + rng,
-      valueInputOption: 'RAW'
-    };
+  var params = {
+    spreadsheetId: ssId,
+    range: "'" + shtTitle + "'!" + rng,
+    valueInputOption: 'xxx'
+  };
 
-    let fn = gapi.client.sheets.spreadsheets.values.update
-
-  console.log('fn1', fn)
+    
   const options = { limit: 5, delay: 2000, params: params, resource: resource};
   const retrier = new Retrier(options);
 
@@ -591,9 +570,6 @@ async function updateSheetRowTest(vals, shtIdx, shtTitle, ssId = spreadsheetId) 
       result => {console.log('result', result);return result},
       error =>  {console.log(error) ;return error}
     );
-
-    console.log('response', response)
-
 
   return response
 
