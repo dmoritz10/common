@@ -390,7 +390,7 @@ const Retrier = class {
   
   }
   
-  async function appendSheetRow(vals, shtTitle) { // *
+  async function appendSheetRow(vals, shtTitle) { // **
     
     var resource = {
       "majorDimension": "ROWS",
@@ -425,7 +425,7 @@ const Retrier = class {
   
   }
   
-  async function deleteSheetRow(idx, sheetName) { // *
+  async function deleteSheetRow(idx, sheetName) { // **
   
     var shtId = await getSheetId(sheetName)
   
@@ -463,7 +463,7 @@ const Retrier = class {
   
   }
   
-  async function updateSheetHdr(vals, shtTitle) { // *
+  async function updateSheetHdr(vals, shtTitle) { // **
   
     var resource = {
       "majorDimension": "ROWS",
@@ -543,7 +543,7 @@ const Retrier = class {
   
   }
   
-  async function renameSheet(shtId, shtTitle) { // *
+  async function renameSheet(shtId, shtTitle) { // **
     
     const rq = {"requests" : [
       {
@@ -575,7 +575,7 @@ const Retrier = class {
       
   }
   
-  async function copySheet(shtId) { // *
+  async function copySheet(shtId) { // **
   
     var params = {
       spreadsheetId: spreadsheetId,  
@@ -701,52 +701,28 @@ const Retrier = class {
                         "' AND " + "mimeType='application/vnd.google-apps.spreadsheet'" +
                         " AND " + "trashed = false"
   
-  
-    let response = await gapi.client.drive.files.list({
-                                q: q,
-                                fields: 'nextPageToken, files(id, name, ownedByMe)',
-                                spaces: 'drive'})
-  
-      .then(async response => {               console.log('gapi listDriveFiles first try', response)
-          
-          return response})
-  
-      .catch(async err  => {                  console.log('gapi listDriveFiles catch', err)
-          
-          if (err.result.error.code == 401 || err.result.error.code == 403) {
-              await Goth.token()              // for authorization errors obtain an access token
-              let retryResponse = await gapi.client.drive.files.list({
-                                      q: q,
-                                      fields: 'nextPageToken, files(id, name, ownedByMe)',
-                                      spaces: 'drive'})
-                  .then(async retry => {      console.log('gapi listDriveFiles retry', retry) 
-                      
-                      return retry})
-  
-                  .catch(err  => {            console.log('gapi listDriveFiles error2', err)
-                      
-                      bootbox.alert('gapi listDriveFiles error: ' + err.result.error.code + ' - ' + err.result.error.message);
-  
-                      return null });         // cancelled by user, timeout, etc.
-  
-              return retryResponse
-  
-          } else {
-              
-              bootbox.alert('gapi listDriveFiles error: ' + shtTitle + ' - ' + err.result.error.message);
-              return null
-  
-          }
-              
-      })
-          
-                                                  console.log('after gapi')
+    const callerName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
+    console.log('pre gapi', callerName)     
     
+    const options = { limit: 5, delay: 2000, quotaExceeded: [429, 403]};
+    const retrier = new Retrier(options);
+    let response = await retrier
+    .resolve(async attempt => gapi.client.drive.files.list({
+                                        q: q,
+                                        fields: 'nextPageToken, files(id, name, ownedByMe)',
+                                        spaces: 'drive'}))
+    .then(
+        result => {console.log('result', result);return result},
+        error =>  {console.log(error) ;return error}
+    );
+    
+    console.log('post gapi', callerName)  
+                    
     return response
   
   }
   
-  async function getSSId(sheetName) {
+  async function getSSId(sheetName) { // -
   
     var response = await listDriveFiles(sheetName)
   
