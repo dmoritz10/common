@@ -390,64 +390,42 @@ const Retrier = class {
   
   }
   
-  async function appendSheetRow(vals, shtTitle) {
+  async function appendSheetRow(vals, shtTitle) { // *
     
-    await writeThrottle(1)
-  
     var resource = {
       "majorDimension": "ROWS",
       "values": [vals]    
     }
   
-      var row = 2
-      var rng = calcRngA1(row, 1, 1, vals.length)
-  
-      var params = {
-        spreadsheetId: spreadsheetId,
-        range: "'" + shtTitle + "'!" + rng,
-        valueInputOption: 'RAW',
-        insertDataOption: 'INSERT_ROWS'
-      };
-  
-      var response = await gapi.client.sheets.spreadsheets.values.append(params, resource)
-        .then(async response => {               console.log('gapi updateSheetRow first try', response)
-            
-            return response})
-  
-        .catch(async err  => {                  console.log('gapi updateSheetRow catch', err)
-            
-            if (err.result.error.code == 401 || err.result.error.code == 403) {
-                await Goth.token()              // for authorization errors obtain an access token
-                let retryResponse = await gapi.client.sheets.spreadsheets.values.append(params, resource)
-                    .then(async retry => {      console.log('gapi updateSheetRow retry', retry) 
-                        
-                        return retry})
-  
-                    .catch(err  => {            console.log('gapi updateSheetRow error2', err)
-                        
-                        console.error('error appending row "' + shtTitle + '": ' + err.result.error.message);
-                        bootbox.alert('error appending row "' + shtTitle + '": ' + err.result.error.message);
-                        
-                        return null });         // cancelled by user, timeout, etc.
-  
-                return retryResponse
-  
-            } else {
-                
-                bootbox.alert('gapi updateSheetRow error: ' + shtTitle + ' - ' + err.result.error.message);
-                return null
-  
-            }
-                
-        })
-          
-                                                  console.log('after gapi updateSheetRow')
+    var row = 2
+    var rng = calcRngA1(row, 1, 1, vals.length)
+
+    var params = {
+    spreadsheetId: spreadsheetId,
+    range: "'" + shtTitle + "'!" + rng,
+    valueInputOption: 'RAW',
+    insertDataOption: 'INSERT_ROWS'
+    };
+
+    const callerName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
+    console.log('pre gapi', callerName)     
+    
+    const options = { limit: 5, delay: 2000};
+    const retrier = new Retrier(options);
+    let response = await retrier
+    .resolve(async attempt => gapi.client.sheets.spreadsheets.values.append(params, resource))
+    .then(
+        result => {console.log('result', result);return result},
+        error =>  {console.log(error) ;return error}
+    );
+    
+    console.log('post gapi', callerName)  
   
     return response
   
   }
   
-  async function deleteSheetRow(idx, sheetName) {
+  async function deleteSheetRow(idx, sheetName) { // *
   
     var shtId = await getSheetId(sheetName)
   
@@ -467,46 +445,25 @@ const Retrier = class {
         ]
     }
   
-    let response = await gapi.client.sheets.spreadsheets.batchUpdate({spreadsheetId: spreadsheetId, resource: request})
-          .then(async response => {               console.log('gapi deleteSheetRow first try', response)
-              
-              return response})
-  
-          .catch(async err  => {                  console.log('gapi deleteSheetRow catch', err)
-              
-              if (err.result.error.code == 401 || err.result.error.code == 403) {
-                  await Goth.token()              // for authorization errors obtain an access token
-                  let retryResponse = await gapi.client.sheets.spreadsheets.batchUpdate({spreadsheetId: spreadsheetId, resource: request})
-                      .then(async retry => {      console.log('gapi deleteSheetRow retry', retry) 
-                          
-                          return retry})
-  
-                      .catch(err  => {            console.log('gapi deleteSheetRow error2', err)
-                          
-                          bootbox.alert('gapi deleteSheetRow error: ' + err.result.error.code + ' - ' + err.result.error.message);
-  
-                          return null });         // cancelled by user, timeout, etc.
-  
-                  return retryResponse
-  
-              } else {
-                  
-                  bootbox.alert('gapi deleteSheetRow error: ' + shtTitle + ' - ' + err.result.error.message);
-                  return null
-  
-              }
-                  
-          })
-          
-                                                  console.log('after gapi')
+    const callerName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
+    console.log('pre gapi', callerName)     
     
-          return response
+    const options = { limit: 5, delay: 2000};
+    const retrier = new Retrier(options);
+    let response = await retrier
+    .resolve(async attempt => gapi.client.sheets.spreadsheets.batchUpdate({spreadsheetId: spreadsheetId, resource: request}))
+    .then(
+        result => {console.log('result', result);return result},
+        error =>  {console.log(error) ;return error}
+    );
+    
+    console.log('post gapi', callerName)  
+  
+    return response
   
   }
   
-  async function updateSheetHdr(vals, shtTitle) {
-  
-    await writeThrottle(1)
+  async function updateSheetHdr(vals, shtTitle) { // *
   
     var resource = {
       "majorDimension": "ROWS",
@@ -521,41 +478,20 @@ const Retrier = class {
         valueInputOption: 'RAW'
       };
   
-      var response = await gapi.client.sheets.spreadsheets.values.update(params, resource)
-        .then(async response => {               console.log('gapi updateSheetHdr first try', response)
-            
-            return response})
-  
-        .catch(async err  => {                  console.log('gapi updateSheetHdr catch', err)
-            
-            if (err.result.error.code == 401 || err.result.error.code == 403) {
-                await Goth.token()              // for authorization errors obtain an access token
-                let retryResponse = await gapi.client.sheets.spreadsheets.values.update(params, resource)
-                    .then(async retry => {      console.log('gapi updateSheetHdr retry', retry) 
-                        
-                        return retry})
-  
-                    .catch(err  => {            console.log('gapi updateSheetHdr error2', err)
-                        
-                        bootbox.alert('gapi updateSheetRow error: ' + err.result.error.code + ' - ' + err.result.error.message);
-  
-                        return null });         // cancelled by user, timeout, etc.
-  
-                return retryResponse
-  
-            } else {
-                
-              console.error('error updating row "' + shtTitle + '": ' + err.result.error.message);
-              bootbox.alert('error updating row "' + shtTitle + '": ' + err.result.error.message);
-  
-                return null
-  
-            }
-                
-        })
-        
-                                                console.log('after gapi updateSheetHdr')
-  
+      const callerName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
+      console.log('pre gapi', callerName)     
+      
+      const options = { limit: 5, delay: 2000};
+      const retrier = new Retrier(options);
+      let response = await retrier
+      .resolve(async attempt => gapi.client.sheets.spreadsheets.values.update(params, resource))
+      .then(
+          result => {console.log('result', result);return result},
+          error =>  {console.log(error) ;return error}
+      );
+      
+      console.log('post gapi', callerName)  
+    
       return response
   
   }
@@ -607,10 +543,8 @@ const Retrier = class {
   
   }
   
-  async function renameSheet(shtId, shtTitle) {
+  async function renameSheet(shtId, shtTitle) { // *
     
-    await writeThrottle(1)
-  
     const rq = {"requests" : [
       {
        updateSheetProperties: {
@@ -623,48 +557,25 @@ const Retrier = class {
        }]}
      ;
       
-    var response = await gapi.client.sheets.spreadsheets.batchUpdate({spreadsheetId: spreadsheetId, resource: rq})
-      .then(async response => {               console.log('gapi renameSheet first try', response)
-          
-          return response})
-  
-      .catch(async err  => {                  console.log('gapi renameSheet catch', err)
-          
-          if (err.result.error.code == 401 || err.result.error.code == 403) {
-              await Goth.token()              // for authorization errors obtain an access token
-              let retryResponse = await gapi.client.sheets.spreadsheets.batchUpdate({spreadsheetId: spreadsheetId, resource: rq})
-                  .then(async retry => {      console.log('gapi renameSheet retry', retry) 
-                      
-                      return retry})
-  
-                  .catch(err  => {            console.log('gapi renameSheet error2', err)
-                      
-                      bootbox.alert('gapi renameSheet error: ' + err.result.error.code + ' - ' + err.result.error.message);
-  
-                      return null });         // cancelled by user, timeout, etc.
-  
-              return retryResponse
-  
-          } else {
-              
-            console.error('error updating row'  + '": ' + err.result.error.message);
-            bootbox.alert('error updating row'  + '": ' + err.result.error.message);
-  
-              return null
-  
-          }
-              
-      })
+     const callerName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
+     console.log('pre gapi', callerName)     
+     
+     const options = { limit: 5, delay: 2000};
+     const retrier = new Retrier(options);
+     let response = await retrier
+     .resolve(async attempt => gapi.client.sheets.spreadsheets.batchUpdate({spreadsheetId: spreadsheetId, resource: rq}))
+     .then(
+         result => {console.log('result', result);return result},
+         error =>  {console.log(error) ;return error}
+     );
+     
+     console.log('post gapi', callerName)  
+   
+     return response
       
-                                              console.log('after gapi renameSheet')
-  
-    return response
-  
   }
   
-  async function copySheet(shtId) {
-  
-    await writeThrottle(1)
+  async function copySheet(shtId) { // *
   
     var params = {
       spreadsheetId: spreadsheetId,  
@@ -675,47 +586,23 @@ const Retrier = class {
       destinationSpreadsheetId: spreadsheetId
     };
   
-      
-    var response = await gapi.client.sheets.spreadsheets.sheets.copyTo(params, copySheetToAnotherSpreadsheetRequestBody)
-      .then(async response => {               console.log('gapi copySheet first try', response)
-          
-          return response})
-  
-      .catch(async err  => {                  console.log('gapi copySheet catch', err)
-          
-          if (err.result.error.code == 401 || err.result.error.code == 403) {
-              await Goth.token()              // for authorization errors obtain an access token
-              let retryResponse = await gapi.client.sheets.spreadsheets.sheets.copyTo(params, copySheetToAnotherSpreadsheetRequestBody)
-                  .then(async retry => {      console.log('gapi copySheet retry', retry) 
-                      
-                      return retry})
-  
-                  .catch(err  => {            console.log('gapi copySheet error2', err)
-                      
-                      bootbox.alert('gapi updateSheetRow error: ' + err.result.error.code + ' - ' + err.result.error.message);
-  
-                      return null });         // cancelled by user, timeout, etc.
-  
-              return retryResponse
-  
-          } else {
-              
-            console.error('error copying sheet "' + shtId + '": ' + err.result.error.message);
-            bootbox.alert('error copying sheet "' + shtId + '": ' + err.result.error.message);
-  
-              return null
-  
-          }
-              
-      })
-      
-                                              console.log('after gapi copySheet')
-  
-    return response
+    const callerName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
+    console.log('pre gapi', callerName)     
+    
+    const options = { limit: 5, delay: 2000};
+    const retrier = new Retrier(options);
+    let response = await retrier
+        .resolve(async attempt => gapi.client.sheets.spreadsheets.sheets.copyTo(params, copySheetToAnotherSpreadsheetRequestBody))
+        .then(
+            result => {console.log('result', result);return result},
+            error =>  {console.log(error) ;return error}
+        );
+    
+    console.log('post gapi', callerName)  
   
   }
   
-  async function getSheets() { // *
+  async function getSheets() { // **
   
     const callerName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
     console.log('pre gapi', callerName)     
