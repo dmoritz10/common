@@ -135,6 +135,7 @@ const Retrier = class {
       }
 
       console.log('before gapi openShts *')
+      console.log('before gapi *', this.constructor.name)     
   
       const options = { limit: 5, delay: 2000};
       const retrier = new Retrier(options);
@@ -145,7 +146,7 @@ const Retrier = class {
           error =>  {console.log(error) ;return error}
         );
     
-      console.log('after gapi openShts *')     
+      console.log('after gapi *', this.constructor.name)     
   
       var allShts = response.result.valueRanges
   
