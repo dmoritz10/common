@@ -622,43 +622,43 @@ const Retrier = class {
   
   var wtArr = []
   
-  async function writeThrottle(nbrWrites = 1) {
+//   async function writeThrottle(nbrWrites = 1) {
   
-    return
+//     return
   
-    const maxWritesPerMin = 30
-    const delay = (ms) => new Promise(res => setTimeout(res, ms));
-    const ts = (dt) => dt.toISOString().substring(11,23)
+//     const maxWritesPerMin = 30
+//     const delay = (ms) => new Promise(res => setTimeout(res, ms));
+//     const ts = (dt) => dt.toISOString().substring(11,23)
   
-  console.log('begin', ts(new Date()))
+//   console.log('begin', ts(new Date()))
     
-    // var wtArr = writeThrottleArr
-    var oma = new Date();
-    oma.setMinutes(oma.getMinutes() - 1);
+//     // var wtArr = writeThrottleArr
+//     var oma = new Date();
+//     oma.setMinutes(oma.getMinutes() - 1);
   
-    console.log('writeThrottle', ts(oma), wtArr.map( ele => ts(ele)), wtArr.map( ele => ele - oma))
-    // console.log('oma', ts(oma), ts(wtArr[i]), wtArr[i] < oma)
+//     console.log('writeThrottle', ts(oma), wtArr.map( ele => ts(ele)), wtArr.map( ele => ele - oma))
+//     // console.log('oma', ts(oma), ts(wtArr[i]), wtArr[i] < oma)
   
-    for (let i=wtArr.length-1; i>=0; i--) {
-      if (wtArr[i] < oma) {console.log('remove wtArr', i, ts(wtArr[i]), ts(oma));wtArr.splice(i, 1)}
+//     for (let i=wtArr.length-1; i>=0; i--) {
+//       if (wtArr[i] < oma) {console.log('remove wtArr', i, ts(wtArr[i]), ts(oma));wtArr.splice(i, 1)}
       
-    }
+//     }
   
-    if (wtArr.length > maxWritesPerMin - nbrWrites - 3) {
+//     if (wtArr.length > maxWritesPerMin - nbrWrites - 3) {
       
-      console.log('delay', wtArr[0] - oma)
-      await delay (wtArr[0] - oma);
-      console.log('delay resume', ts(new Date()))
+//       console.log('delay', wtArr[0] - oma)
+//       await delay (wtArr[0] - oma);
+//       console.log('delay resume', ts(new Date()))
     
-    }
+//     }
   
-    console.log('resume', ts(new Date()))
+//     console.log('resume', ts(new Date()))
   
-    for (let i = 0;i<nbrWrites;i++) wtArr.push(new Date())
+//     for (let i = 0;i<nbrWrites;i++) wtArr.push(new Date())
   
-    return
+//     return
   
-  }
+//   }
   
   
   //  Drive
@@ -778,6 +778,9 @@ const Retrier = class {
   
   async function updateCalendarEvent(eventId, event) { // *
   
+    const callerName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
+    console.log('pre gapi', callerName)     
+ 
     const options = { limit: 5, delay: 2000, quotaExceeded: [429, 403]};
     const retrier = new Retrier(options);
     let response = await retrier
@@ -798,6 +801,9 @@ const Retrier = class {
   
   async function insertCalendarEvent(event) { // *
   
+    const callerName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
+    console.log('pre gapi', callerName)     
+ 
     const options = { limit: 5, delay: 2000, quotaExceeded: [429, 403]};
     const retrier = new Retrier(options);
     let response = await retrier
@@ -817,6 +823,9 @@ const Retrier = class {
   
   async function deleteCalendarEvent(eventId) { // *
   
+    const callerName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
+    console.log('pre gapi', callerName)     
+ 
     const options = { limit: 5, delay: 2000, quotaExceeded: [429, 403]};
     const retrier = new Retrier(options);
     let response = await retrier
