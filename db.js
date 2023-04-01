@@ -701,6 +701,8 @@ async function deleteSheetRow(idx, sheetName) {
 
   var shtId = await getSheetId(sheetName)
 
+  console.log('shtId', shtId)
+
   var request = {
     "requests":
       [

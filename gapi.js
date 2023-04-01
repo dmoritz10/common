@@ -252,7 +252,7 @@ const Retrier = class {
   
   }
   
-  async function updateSheet(title, vals) { // *
+  async function updateSheet(title, vals) { // **
   
     var nbrRows = vals.length
     var maxRows = 5000
@@ -607,7 +607,7 @@ const Retrier = class {
     
     console.log('post gapi', callerName)  
   
-    var sheets = response
+    var sheets = response.result.sheets
   
     for (var j = 0; j < sheets.length; j++) {
   
