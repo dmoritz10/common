@@ -809,7 +809,7 @@ const Retrier = class {
     let response = await retrier
     .resolve(async attempt => gapi.client.calendar.events.insert({
                             'calendarId': 'primary',
-                            'resource': BeforeUnloadEvent}))
+                            'resource': event}))
     .then(
         result => {console.log('result', result);return result},
         error =>  {console.log(error) ;return error}
