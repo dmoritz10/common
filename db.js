@@ -1,56 +1,4 @@
-const Retrier = class {
-  constructor(opts = {}) {
-      this.opts = {};
-      this.attempt = 0;
-      this.opts.limit = opts.limit || 1;
-      this.opts.delay = opts.delay || 0;
-      this.opts.firstAttemptDelay = opts.firstAttemptDelay || 0;
-      this.opts.reAuth = opts.reAuth || [401, 403];
-      this.opts.quotaExceeded = opts.quotaExceeded || [408, 429];
-  }
-  resolve(fn) {
-      this.fn = fn;
-      return new Promise((resolve, reject) => {
-          this._resolve = resolve;
-          this._reject = reject;
-          this.attempt = 0;
-          this._doRetry();
-      });
-  }
-  _doRetry(recentError) {
-      if (this.attempt >= this.opts.limit) {
-          // return this._reject(recentError || new Error('Retry limit reached!'));
-          return this._reject(new Error('Retry limit reached!'));
-      }
-      setTimeout(async () => {
-
-          var promise = this.fn();
-
-          if (!(promise instanceof Promise)) {
-              // TODO: throw error in contructor if params aren't valid
-              return this._reject(new Error('Expecting function which returns promise!'));
-          }
-          promise.then(response => {
-              this._resolve(response);
-          }).catch( async error => {
-              if (this.opts.reAuth.indexOf(error.status) > -1) {
-                console.log('if', error)
-                await Goth.token()              // for authorization errors obtain an access token
-                this._doRetry(error);
-              }
-              else if (this.opts.quotaExceeded.indexOf(error.status) > -1) {
-                console.log('else if', error)
-                this.attempt++;
-                this._doRetry(error);
-              } 
-              else {
-                console.log('else', error)
-                this._reject(error)
-              }
-          });
-      }, this.attempt === 0 ? this.opts.firstAttemptDelay : 2 ** this.attempt * this.opts.delay);
-  }
-}
+/*
 
 //  database access
 
@@ -1423,3 +1371,5 @@ async function deleteCalendarEvent(eventId) {
 
 
 }
+
+*/

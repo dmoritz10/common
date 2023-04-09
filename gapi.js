@@ -259,7 +259,7 @@ const Retrier = class {
     var strtRow = 0
     var currRow = 0
   
-    // var promiseArr = []
+    var promiseArr = []
     var responseArr = []
   
     while (vals.length > 0) {
@@ -289,61 +289,44 @@ const Retrier = class {
       valueInputOption: 'RAW'
       };
   
+      const options = { limit: 5, delay: 2000};
+      const retrier = new Retrier(options);
   
-    //   promiseArr.push(
-    //     gapi.client.sheets.spreadsheets.values.update(params, resource)
-    //       .then(async response => {               console.log('gapi updateSheet first try', response)
-              
-    //           return response})
-    //       .catch(async err  => {                  console.log('gapi updateSheet catch', err)
-              
-    //           if (err.result.error.code == 401 || err.result.error.code == 403) {
-    //               await Goth.token()              // for authorization errors obtain an access token
-    //               let retryResponse = await gapi.client.sheets.spreadsheets.values.update(params, resource)
-    //                   .then(async retry => {      console.log('gapi updateSheet retry', retry) 
-                          
-    //                       return retry})
-  
-    //                   .catch(err  => {            console.log('gapi updateSheet error2', err)
-                          
-    //                       bootbox.alert('gapi updateSheet error: ' + err.result.error.code + ' - ' + err.result.error.message);
-  
-    //                       return null });         // cancelled by user, timeout, etc.
-  
-    //               return retryResponse
-  
-    //           } else {
-                  
-    //               bootbox.alert('gapi updateSheet error: ' + shtTitle + ' - ' + err.result.error.message);
-    //               return null
-  
-    //           }
-                  
-    //       })
-    //   )
+      promiseArr.push(
+        retrier
+        .resolve(async attempt => gapi.client.sheets.spreadsheets.values.update(params, resource))
+        .then(
+          result => {console.log(result);return result},
+          error =>  {console.log(error) ;return error}
+        )
+      )
 
   
-    const callerName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
-    console.log('pre gapi', callerName)     
+    // const callerName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
+    // console.log('pre gapi', callerName)     
 
-    const options = { limit: 5, delay: 2000};
-    const retrier = new Retrier(options);
-    let response = await retrier
-      .resolve(async attempt => gapi.client.sheets.spreadsheets.values.update(params, resource))
-      .then(
-        result => {console.log(result);return result},
-        error =>  {console.log(error) ;return error}
-      );
+    // const options = { limit: 5, delay: 2000};
+    // const retrier = new Retrier(options);
+    // let response = await retrier
+    //   .resolve(async attempt => gapi.client.sheets.spreadsheets.values.update(params, resource))
+    //   .then(
+    //     result => {console.log(result);return result},
+    //     error =>  {console.log(error) ;return error}
+    //   );
       
-    console.log('post gapi', callerName)     
+    // console.log('post gapi', callerName)     
   
-    responseArr.push(response)
+    // responseArr.push(response)
 
 
     }
-    // await Promise.all(promiseArr)
 
-    return responseArr
+    await Promise.all(promiseArr)
+
+    console.log('post promise.all', promiseArr)     
+
+
+    // return responseArr
   
   } 
   
