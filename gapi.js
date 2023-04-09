@@ -260,11 +260,15 @@ const Retrier = class {
     var currRow = 0
   
     var promiseArr = []
+    var resourceArr = []
+    var paramsArr = []
+    var i = -1
     var responseArr = []
   
     while (vals.length > 0) {
   
       strtRow = currRow
+      i++
   
       var chunk = vals.splice(0, maxRows)
   
@@ -280,6 +284,8 @@ const Retrier = class {
         "majorDimension": "ROWS",
         "values": chunk   
       }
+
+      resourceArr.push(resource)
   
       var rng = calcRngA1(strtRow + 1, 1, chunk.length, chunk[0].length)
   
@@ -288,13 +294,16 @@ const Retrier = class {
       range: "'" + title + "'!" + rng,
       valueInputOption: 'RAW'
       };
+
+      paramsArr.push(params)
+
   
       const options = { limit: 5, delay: 2000};
       const retrier = new Retrier(options);
   
       promiseArr.push(
         new Retrier(options)
-        .resolve(async attempt => gapi.client.sheets.spreadsheets.values.update(params, resource))
+        .resolve(async attempt => gapi.client.sheets.spreadsheets.values.update(params[i], resource[i]))
         .then(
           result => {console.log(result);return result},
           error =>  {console.log(error) ;return error}
