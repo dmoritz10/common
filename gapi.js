@@ -293,7 +293,7 @@ const Retrier = class {
       const retrier = new Retrier(options);
   
       promiseArr.push(
-        retrier
+        new Retrier(options)
         .resolve(async attempt => gapi.client.sheets.spreadsheets.values.update(params, resource))
         .then(
           result => {console.log(result);return result},
