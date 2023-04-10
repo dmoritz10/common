@@ -293,29 +293,9 @@ const Retrier = class {
       promiseArr.push(
         new Retrier(options)
         .resolve(async attempt => gapi.client.sheets.spreadsheets.values.update(params, resource))
-        .then(
-          result => {console.log(result);return result},
-          error =>  {console.log(error) ;return error}
-        )
+        .then(result => {console.log(result);return result},
+              error =>  {console.log(error) ;return error})
       )
-
-  
-    // const callerName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
-    // console.log('pre gapi', callerName)     
-
-    // const options = { limit: 5, delay: 2000};
-    // const retrier = new Retrier(options);
-    // let response = await retrier
-    //   .resolve(async attempt => gapi.client.sheets.spreadsheets.values.update(params, resource))
-    //   .then(
-    //     result => {console.log(result);return result},
-    //     error =>  {console.log(error) ;return error}
-    //   );
-      
-    // console.log('post gapi', callerName)     
-  
-    // responseArr.push(response)
-
 
     }
 
@@ -324,7 +304,7 @@ const Retrier = class {
 
     var rtnPromisesArr = await Promise.all(promiseArr)
 
-    console.log('post promise.all', rtnPromisesArr)     
+    console.log('rtnPromisesArr', rtnPromisesArr)     
 
     console.log('post gapi', callerName)     
 
