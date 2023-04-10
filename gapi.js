@@ -319,9 +319,14 @@ const Retrier = class {
 
     }
 
+    const callerName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
+    console.log('pre gapi', callerName)     
+
     var rtnPromisesArr = await Promise.all(promiseArr)
 
     console.log('post promise.all', rtnPromisesArr)     
+
+    console.log('post gapi', callerName)     
 
     return rtnPromisesArr
   
