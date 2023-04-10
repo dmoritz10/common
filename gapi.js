@@ -260,15 +260,10 @@ const Retrier = class {
     var currRow = 0
   
     var promiseArr = []
-    var resourceArr = []
-    var paramsArr = []
-    var i = -1
-    var responseArr = []
   
     while (vals.length > 0) {
   
       strtRow = currRow
-      i++
   
       var chunk = vals.splice(0, maxRows)
   
@@ -285,8 +280,6 @@ const Retrier = class {
         "values": chunk   
       }
 
-      resourceArr.push(resource)
-  
       let rng = calcRngA1(strtRow + 1, 1, chunk.length, chunk[0].length)
   
       let params = {
@@ -295,11 +288,7 @@ const Retrier = class {
       valueInputOption: 'RAW'
       };
 
-      paramsArr.push(params)
-
-  
       const options = { limit: 5, delay: 2000};
-      const retrier = new Retrier(options);
   
       promiseArr.push(
         new Retrier(options)
@@ -330,12 +319,11 @@ const Retrier = class {
 
     }
 
-    await Promise.all(promiseArr)
+    var rtnPromisesArr = await Promise.all(promiseArr)
 
-    console.log('post promise.all', promiseArr)     
+    console.log('post promise.all', rtnPromisesArr)     
 
-
-    // return responseArr
+    return rtnPromisesArr
   
   } 
   
