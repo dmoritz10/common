@@ -585,50 +585,7 @@ const Retrier = class {
     return null
   }
   
-  var wtArr = []
-  
-//   async function writeThrottle(nbrWrites = 1) {
-  
-//     return
-  
-//     const maxWritesPerMin = 30
-//     const delay = (ms) => new Promise(res => setTimeout(res, ms));
-//     const ts = (dt) => dt.toISOString().substring(11,23)
-  
-//   console.log('begin', ts(new Date()))
-    
-//     // var wtArr = writeThrottleArr
-//     var oma = new Date();
-//     oma.setMinutes(oma.getMinutes() - 1);
-  
-//     console.log('writeThrottle', ts(oma), wtArr.map( ele => ts(ele)), wtArr.map( ele => ele - oma))
-//     // console.log('oma', ts(oma), ts(wtArr[i]), wtArr[i] < oma)
-  
-//     for (let i=wtArr.length-1; i>=0; i--) {
-//       if (wtArr[i] < oma) {console.log('remove wtArr', i, ts(wtArr[i]), ts(oma));wtArr.splice(i, 1)}
-      
-//     }
-  
-//     if (wtArr.length > maxWritesPerMin - nbrWrites - 3) {
-      
-//       console.log('delay', wtArr[0] - oma)
-//       await delay (wtArr[0] - oma);
-//       console.log('delay resume', ts(new Date()))
-    
-//     }
-  
-//     console.log('resume', ts(new Date()))
-  
-//     for (let i = 0;i<nbrWrites;i++) wtArr.push(new Date())
-  
-//     return
-  
-//   }
-  
-  
-  //  Drive
-  
-  async function listDriveFiles(sheetName) { // **
+   async function listDriveFiles(sheetName) { // **
   
     let q = "name = '" + sheetName +
                         "' AND " + "mimeType='application/vnd.google-apps.spreadsheet'" +
