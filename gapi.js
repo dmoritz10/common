@@ -51,7 +51,6 @@ const Retrier = class {
         }, this.attempt === 0 ? this.opts.firstAttemptDelay : 2 ** this.attempt * this.opts.delay);
     }
   }
-  
 
   //  database access
   
