@@ -385,6 +385,7 @@ const Retrier = class {
       "values": [vals]    
     }
   
+    console.log('vals', vals.length, vals)
     var row = 2
     var rng = calcRngA1(row, 1, 1, vals.length)
 
