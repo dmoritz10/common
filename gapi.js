@@ -252,7 +252,7 @@ const Retrier = class {
     const options = { limit: 5, delay: 2000};
     const retrier = new Retrier(options);
     let response = await retrier
-      .resolve(async attempt => gapi.client.sheets.spreadsheets.values.batchUpdate({spreadsheetId: spreadsheetId, resource: resource})
+      .resolve(async attempt => gapi.client.sheets.spreadsheets.values.batchUpdate({spreadsheetId: spreadsheetId, resource: resource}))
       .then(
         result => {console.log(result);return result},
         error =>  {console.log(error) ;return error}
