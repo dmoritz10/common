@@ -385,15 +385,13 @@ const Retrier = class {
       "values": [vals]    
     }
   
-    var row = 1
-    var rng = calcRngA1(row, 1, 1, vals.length)
-    console.log('vals', vals.length, vals, rng)
+    var rng = calcRngA1(1, 1, 1, vals.length)
 
     var params = {
-    spreadsheetId: spreadsheetId,
-    range: "'" + shtTitle + "'!" + rng,
-    valueInputOption: 'RAW',
-    insertDataOption: 'INSERT_ROWS'
+      spreadsheetId: spreadsheetId,
+      range: "'" + shtTitle + "'!" + rng,
+      valueInputOption: 'RAW',
+      insertDataOption: 'INSERT_ROWS'
     };
 
     const callerName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
