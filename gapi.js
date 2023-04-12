@@ -231,6 +231,39 @@ const Retrier = class {
   
   }
   
+  async function clearSheet(shtId, ssId = spreadsheetId) { // **
+
+    var resource = {
+      "requests": [
+        {
+          "updateCells": {
+            "range": {
+              "sheetId": shtId
+            },
+            "fields": "*"
+          }
+        }
+      ]
+    };
+  
+    const callerName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
+    console.log('pre gapi', callerName)     
+
+    const options = { limit: 5, delay: 2000};
+    const retrier = new Retrier(options);
+    let response = await retrier
+      .resolve(async attempt => gapi.client.sheets.spreadsheets.values.batchUpdate({spreadsheetId: spreadsheetId, resource: resource})
+      .then(
+        result => {console.log(result);return result},
+        error =>  {console.log(error) ;return error}
+      );
+      
+    console.log('post gapi', callerName)     
+  
+    return response
+  
+  }
+  
   async function batchUpdateSheet(resource) { // *
     
     const callerName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
@@ -573,13 +606,17 @@ const Retrier = class {
   
     var sheets = response.result.sheets
   
-    for (var j = 0; j < sheets.length; j++) {
-  
-      var sht = sheets[j].properties
-  
-      if (sht.title == shtTitle) return sht.sheetId
-  
-    }
+    if (shtTitle) {
+    
+      for (var j = 0; j < sheets.length; j++) {
+    
+        var sht = sheets[j].properties
+    
+        if (sht.title == shtTitle) return sht.sheetId
+    
+      }
+
+    } else return sheets[0].sheetId
   
     return null
   }
@@ -766,7 +803,7 @@ const Retrier = class {
   
     //  Gmail
   
-    async function listGmailLabels(userId = 'me') { // *
+    async function listGmailLabels(userId = 'me') { // **
   
       const callerName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
       console.log('pre gapi', callerName)     
@@ -774,9 +811,7 @@ const Retrier = class {
       const options = { limit: 5, delay: 2000, quotaExceeded: [429, 403]};
       const retrier = new Retrier(options);
       let response = await retrier
-        .resolve(async attempt => await gapi.client.gmail.users.labels.list({
-                                                              'userId': 'me',
-                                                            }))
+        .resolve(async attempt => await gapi.client.gmail.users.labels.list({'userId': 'me',}))
         .then(
             result => {console.log('result', result);return result},
             error =>  {console.log(error) ;return error}
