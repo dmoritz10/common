@@ -697,7 +697,7 @@ const Retrier = class {
   
   //  Calendar
   
-  async function updateCalendarEvent(eventId, event) { // *
+  async function updateCalendarEvent(eventId, event) { // **
   
     const callerName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
     console.log('pre gapi', callerName)     
@@ -720,7 +720,7 @@ const Retrier = class {
   
   }
   
-  async function insertCalendarEvent(event) { // *
+  async function insertCalendarEvent(event) { // **
   
     const callerName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
     console.log('pre gapi', callerName)     
@@ -742,7 +742,7 @@ const Retrier = class {
     
   }
   
-  async function deleteCalendarEvent(eventId) { // *
+  async function deleteCalendarEvent(eventId) { // **
   
     const callerName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
     console.log('pre gapi', callerName)     
@@ -764,3 +764,27 @@ const Retrier = class {
    
   }
   
+    //  Gmail
+  
+    async function listGmailLabels(userId = 'me') { // *
+  
+      const callerName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
+      console.log('pre gapi', callerName)     
+   
+      const options = { limit: 5, delay: 2000, quotaExceeded: [429, 403]};
+      const retrier = new Retrier(options);
+      let response = await retrier
+      .resolve(async attempt => await gapi.client.gmail.users.labels.list({
+                                                            'userId': 'me',
+                                                          }))
+      .then(
+          result => {console.log('result', result);return result},
+          error =>  {console.log(error) ;return error}
+      );
+      
+      console.log('post gapi', callerName)  
+                      
+      return response 
+    
+    }
+   
