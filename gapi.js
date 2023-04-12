@@ -683,11 +683,11 @@ const Retrier = class {
     const options = { limit: 5, delay: 2000, quotaExceeded: [429, 403]};
     const retrier = new Retrier(options);
     let response = await retrier
-    .resolve(async attempt => gapi.client.drive.files.update({fileId : fileId, resource: { name: fileName}}))
-    .then(
-        result => {console.log('result', result);return result},
-        error =>  {console.log(error) ;return error}
-    );
+      .resolve(async attempt => gapi.client.drive.files.update({fileId : fileId, resource: { name: fileName}}))
+      .then(
+          result => {console.log('result', result);return result},
+          error =>  {console.log(error) ;return error}
+      );
     
     console.log('post gapi', callerName)  
     
@@ -728,13 +728,13 @@ const Retrier = class {
     const options = { limit: 5, delay: 2000, quotaExceeded: [429, 403]};
     const retrier = new Retrier(options);
     let response = await retrier
-    .resolve(async attempt => gapi.client.calendar.events.insert({
-                            'calendarId': 'primary',
-                            'resource': event}))
-    .then(
-        result => {console.log('result', result);return result},
-        error =>  {console.log(error) ;return error}
-    );
+      .resolve(async attempt => gapi.client.calendar.events.insert({
+                              'calendarId': 'primary',
+                              'resource': event}))
+      .then(
+          result => {console.log('result', result);return result},
+          error =>  {console.log(error) ;return error}
+      );
     
     console.log('post gapi', callerName)  
                     
@@ -750,13 +750,13 @@ const Retrier = class {
     const options = { limit: 5, delay: 2000, quotaExceeded: [429, 403]};
     const retrier = new Retrier(options);
     let response = await retrier
-    .resolve(async attempt => await gapi.client.calendar.events.delete({
-                                'calendarId': 'primary',
-                                'eventId': eventId}))
-    .then(
-        result => {console.log('result', result);return result},
-        error =>  {console.log(error) ;return error}
-    );
+      .resolve(async attempt => await gapi.client.calendar.events.delete({
+                                  'calendarId': 'primary',
+                                  'eventId': eventId}))
+      .then(
+          result => {console.log('result', result);return result},
+          error =>  {console.log(error) ;return error}
+      );
     
     console.log('post gapi', callerName)  
                     
@@ -774,13 +774,13 @@ const Retrier = class {
       const options = { limit: 5, delay: 2000, quotaExceeded: [429, 403]};
       const retrier = new Retrier(options);
       let response = await retrier
-      .resolve(async attempt => await gapi.client.gmail.users.labels.list({
-                                                            'userId': 'me',
-                                                          }))
-      .then(
-          result => {console.log('result', result);return result},
-          error =>  {console.log(error) ;return error}
-      );
+        .resolve(async attempt => await gapi.client.gmail.users.labels.list({
+                                                              'userId': 'me',
+                                                            }))
+        .then(
+            result => {console.log('result', result);return result},
+            error =>  {console.log(error) ;return error}
+        );
       
       console.log('post gapi', callerName)  
                       
