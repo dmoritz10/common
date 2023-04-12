@@ -231,7 +231,7 @@ const Retrier = class {
   
   }
   
-  async function clearSheet(shtId, ssId = spreadsheetId) { // **
+  async function clearSheet(shtId, ssId = spreadsheetId) { // 
 
     var resource = {
       "requests": [
