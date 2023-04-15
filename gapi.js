@@ -385,7 +385,7 @@ const Retrier = class {
       "values": vals   
     }
   
-    var rng = calcRngA1(1, 1, 1, vals.length)
+    var rng = calcRngA1(1, 1, 1, vals[0].length)
 
     var params = {
       spreadsheetId: spreadsheetId,
