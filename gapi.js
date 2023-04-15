@@ -538,6 +538,32 @@ const Retrier = class {
       
   }
   
+  async function createSheet() { // **
+    
+    const rq = {"requests" : [
+      {
+       addSheet: {}
+       }]}
+     ;
+      
+     const callerName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
+     console.log('pre gapi', callerName)     
+     
+     const options = { limit: 5, delay: 2000};
+     const retrier = new Retrier(options);
+     let response = await retrier
+     .resolve(async attempt => gapi.client.sheets.spreadsheets.batchUpdate({spreadsheetId: spreadsheetId, resource: rq}))
+     .then(
+         result => {console.log('result', result);return result},
+         error =>  {console.log(error) ;return error}
+     );
+     
+     console.log('post gapi', callerName)  
+   
+     return response
+      
+  }
+  
   async function copySheet(shtId) { // **
   
     var params = {
