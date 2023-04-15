@@ -379,10 +379,13 @@ const Retrier = class {
   }
   
   async function appendSheetRow(vals, shtTitle) { // **
+
+    if (is2dArray(vals)) data = vals
+    else data = [vals]
     
     var resource = {
       "majorDimension": "ROWS",
-      "values": vals   
+      "values": data   
     }
   
     var rng = calcRngA1(1, 1, 1, vals[0].length)
