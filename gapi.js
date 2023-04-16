@@ -836,63 +836,84 @@ const Retrier = class {
   
     //  Gmail
   
-    async function listGmailLabels(userId = 'me') { // **
-  
-      const callerName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
-      console.log('pre gapi', callerName)     
-   
-      const options = { limit: 5, delay: 2000, quotaExceeded: [429, 403]};
-      const retrier = new Retrier(options);
-      let response = await retrier
-        .resolve(async attempt => await gapi.client.gmail.users.labels.list({'userId': 'me',}))
-        .then(
-            result => {console.log('result', result);return result},
-            error =>  {console.log(error) ;return error}
-        );
-      
-      console.log('post gapi', callerName)  
-                      
-      return response 
+  async function listGmailLabels(userId = 'me') { // **
+
+    const callerName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
+    console.log('pre gapi', callerName)     
+
+    const options = { limit: 5, delay: 2000, quotaExceeded: [429, 403]};
+    const retrier = new Retrier(options);
+    let response = await retrier
+      .resolve(async attempt => await gapi.client.gmail.users.labels.list({'userId': 'me',}))
+      .then(
+          result => {console.log('result', result);return result},
+          error =>  {console.log(error) ;return error}
+      );
     
-    }
-   
-    async function listGmailThreads(params) { // **
-  
-      const callerName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
-      console.log('pre gapi', callerName)     
-   
-      const options = { limit: 5, delay: 2000, quotaExceeded: [429, 403]};
-      const retrier = new Retrier(options);
-      let response = await retrier
-        .resolve(async attempt => await gapi.client.gmail.users.threads.list(params))
-        .then(
-            result => {console.log('result', result);return result},
-            error =>  {console.log(error) ;return error}
-        );
-      
-      console.log('post gapi', callerName)  
-                      
-      return response 
+    console.log('post gapi', callerName)  
+                    
+    return response 
+
+  }
+
+  async function listGmailThreads(params) { // **
+
+    const callerName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
+    console.log('pre gapi', callerName)     
+
+    const options = { limit: 5, delay: 2000, quotaExceeded: [429, 403]};
+    const retrier = new Retrier(options);
+    let response = await retrier
+      .resolve(async attempt => await gapi.client.gmail.users.threads.list(params))
+      .then(
+          result => {console.log('result', result);return result},
+          error =>  {console.log(error) ;return error}
+      );
     
-    }
-   
-    async function getGmailMessages(params) { // **
-  
-      const callerName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
-      console.log('pre gapi', callerName)     
-   
-      const options = { limit: 5, delay: 2000, quotaExceeded: [429, 403, 503]}; // 503 The service is currently unavailable
-      const retrier = new Retrier(options);
-      let response = await retrier
-        .resolve(async attempt => await gapi.client.gmail.users.threads.get(params))
-        .then(
-            result => {console.log('result', result);return result},
-            error =>  {console.log(error) ;return error}
-        );
-      
-      console.log('post gapi', callerName)  
-                      
-      return response 
+    console.log('post gapi', callerName)  
+                    
+    return response 
+
+  }
+
+  async function getGmailMessages(params) { // **
+
+    const callerName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
+    console.log('pre gapi', callerName)     
+
+    const options = { limit: 5, delay: 2000, quotaExceeded: [429, 403, 503]}; // 503 The service is currently unavailable
+    const retrier = new Retrier(options);
+    let response = await retrier
+      .resolve(async attempt => await gapi.client.gmail.users.threads.get(params))
+      .then(
+          result => {console.log('result', result);return result},
+          error =>  {console.log(error) ;return error}
+      );
     
-    }
+    console.log('post gapi', callerName)  
+                    
+    return response 
+
+  }
+
+
+  async function batchDeleteGmail(msgIdArr) {
+   
+    const callerName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
+    console.log('pre gapi', callerName)     
+
+    const options = { limit: 5, delay: 2000, quotaExceeded: [429, 403, 503]}; // 503 The service is currently unavailable
+    const retrier = new Retrier(options);
+    let response = await retrier
+      .resolve(async attempt => await gapi.client.gmail.users.messages.batchDelete(params))
+      .then(
+          result => {console.log('result', result);return result},
+          error =>  {console.log(error) ;return error}
+      );
+    
+    console.log('post gapi', callerName)  
+                    
+    return response 
+
+  }
    
