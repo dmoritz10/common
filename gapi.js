@@ -897,6 +897,15 @@ const Retrier = class {
   }
 
   async function batchDeleteGmail(params) {
+
+    console.log('', params)
+
+    // var params = {
+    //   "ids": [
+    //     "1708da41c48d6327",
+    //     "170a7bd25a77173a"
+    //   ]
+    // }
    
     const callerName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
     console.log('pre gapi', callerName)     
