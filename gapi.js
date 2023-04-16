@@ -39,7 +39,12 @@ const Retrier = class {
                   this._doRetry(error);
                 }
                 else if (this.opts.quotaExceeded.indexOf(error.status) > -1) {
-                  console.log('else if', error)
+                  console.log('else if quota', error)
+                  this.attempt++;
+                  this._doRetry(error);
+                } 
+                else if (error.status === null && error.result.error.code == -1) {
+                  console.log('else if network error', error)
                   this.attempt++;
                   this._doRetry(error);
                 } 
@@ -388,7 +393,7 @@ const Retrier = class {
       "values": data   
     }
   
-    var rng = calcRngA1(1, 1, 1, vals[0].length)
+    var rng = calcRngA1(1, 1, 1, 1)
 
     var params = {
       spreadsheetId: spreadsheetId,
