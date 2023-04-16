@@ -410,3 +410,13 @@ function colNbrToLtr(n){
    }
 }
 
+Date.prototype.toLocaleISOString = function() {
+  const zOffsetMs = this.getTimezoneOffset() * 60 * 1000;
+  const localTimeMs = this - zOffsetMs;
+  const date = new Date(localTimeMs);
+  const utcOffsetHr = this.getTimezoneOffset() / 60;
+  const utcOffsetSign = utcOffsetHr <= 0 ? '+' : '-';
+  const utcOffsetString = utcOffsetSign + (utcOffsetHr.toString.length == 1 ? `0${utcOffsetHr}` : `${utcOffsetHr}`) + ':00';
+  return date.toISOString().replace('Z', utcOffsetString);
+};              
+
