@@ -387,6 +387,8 @@ const Retrier = class {
 
     if (is2dArray(vals)) data = vals
     else data = [vals]
+
+    console.log('vals', shtTitle, "'" + shtTitle + "'!" + rng, vals, data)
     
     var resource = {
       "majorDimension": "ROWS",
