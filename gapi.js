@@ -388,7 +388,6 @@ const Retrier = class {
     if (is2dArray(vals)) data = vals
     else data = [vals]
 
-    console.log('vals', shtTitle, "'" + shtTitle + "'!" + rng, vals, data)
     
     var resource = {
       "majorDimension": "ROWS",
@@ -396,6 +395,7 @@ const Retrier = class {
     }
   
     var rng = calcRngA1(1, 1, 1, 1)
+    console.log('vals', shtTitle, "'" + shtTitle + "'!" + rng, vals, data)
 
     var params = {
       spreadsheetId: spreadsheetId,
@@ -574,7 +574,32 @@ const Retrier = class {
       
   }
   
-  async function copySheet(shtId) { // **
+   async function deleteSheet(shtId) { // **
+    
+    const rq = {"requests" : [
+      {
+       deleteSheet: {sheetId: shtId}
+       }]}
+     ;
+      
+     const callerName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
+     console.log('pre gapi', callerName)     
+     
+     const options = { limit: 5, delay: 2000};
+     const retrier = new Retrier(options);
+     let response = await retrier
+     .resolve(async attempt => gapi.client.sheets.spreadsheets.batchUpdate({spreadsheetId: spreadsheetId, resource: rq}))
+     .then(
+         result => {console.log('result', result);return result},
+         error =>  {console.log(error) ;return error}
+     );
+     
+     console.log('post gapi', callerName)  
+   
+     return response
+      
+  }
+   async function copySheet(shtId) { // **
   
     var params = {
       spreadsheetId: spreadsheetId,  
