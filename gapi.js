@@ -578,7 +578,7 @@ const Retrier = class {
     
     const rq = {"requests" : [
       {
-       deleteSheet: {sheetId: shtId}
+       deleteSheet: {sheetId: shtId*1}
        }]}
      ;
       
