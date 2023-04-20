@@ -167,9 +167,8 @@ const Retrier = class {
   
       for (s in allShts) {
       
+        var shtTitle = allShts[s].range.split('!')[0].replace(/'/g,"")
         var shtVals = allShts[s].values
-
-        console.log('shtVals', shtVals, allShts)
 
         if (shtVals) {
 
@@ -177,7 +176,6 @@ const Retrier = class {
           var vals = shtVals.slice(1)
           var rowCnt = vals ? vals.length : 0
     
-          var shtTitle = allShts[s].range.split('!')[0].replace(/'/g,"")
     
           arr[shtTitle] =  {  
             colHdrs:      colHdrs,
@@ -197,8 +195,6 @@ const Retrier = class {
 
         }
 
-        console.log('arr', arr)
-  
         resolve(arr)
 
       }
