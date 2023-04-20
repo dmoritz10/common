@@ -196,6 +196,8 @@ const Retrier = class {
           }
 
         }
+
+        console.log('arr', arr)
   
         resolve(arr)
 
