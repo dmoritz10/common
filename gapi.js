@@ -169,8 +169,10 @@ const Retrier = class {
       
         var shtVals = allShts[s].values
 
+        console.log('shtVals', shtVals, allShts)
+
         if (shtVals) {
-          
+
           var colHdrs = shtVals[0]
           var vals = shtVals.slice(1)
           var rowCnt = vals ? vals.length : 0
