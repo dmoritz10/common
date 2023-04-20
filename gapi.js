@@ -435,8 +435,10 @@ const Retrier = class {
   
   }
   
-  async function deleteSheetRow(idx, sheetName) { // **
+  async function deleteSheetRow(strIdx, sheetName, endIdx) { // **
   
+    if (!endIdx) var endIdx = strIdx
+
     var shtId = await getSheetId(sheetName)
   
     var request = {
@@ -447,8 +449,8 @@ const Retrier = class {
               "range": {
                 "sheetId": shtId,
                 "dimension": "ROWS",
-                "startIndex": idx,
-                "endIndex": idx + 1
+                "startIndex": strIdx,
+                "endIndex": endIdx + 1
               }
             }
           }
@@ -565,8 +567,9 @@ const Retrier = class {
     
     const rq = {"requests" : [
       {
-       addSheet: {}
-       }]}
+        addSheet: {}
+      }
+      ]}
      ;
       
      const callerName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
