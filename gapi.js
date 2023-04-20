@@ -166,25 +166,38 @@ const Retrier = class {
       var arr = []
   
       for (s in allShts) {
+
+        if (allShts[s].values) {
       
-        var shtVals = allShts[s].values
-  
-        var colHdrs = shtVals[0]
-        var vals = shtVals.slice(1)
-        var rowCnt = vals ? vals.length : 0
-  
-        var shtTitle = allShts[s].range.split('!')[0].replace(/'/g,"")
-  
-        arr[shtTitle] =  {  
-          colHdrs:      colHdrs,
-          vals:         shtVals.slice(1),
-          columnCount:  colHdrs.length,
-          rowCount:     rowCnt
+          var shtVals = allShts[s].values
+    
+          var colHdrs = shtVals[0]
+          var vals = shtVals.slice(1)
+          var rowCnt = vals ? vals.length : 0
+    
+          var shtTitle = allShts[s].range.split('!')[0].replace(/'/g,"")
+    
+          arr[shtTitle] =  {  
+            colHdrs:      colHdrs,
+            vals:         shtVals.slice(1),
+            columnCount:  colHdrs.length,
+            rowCount:     rowCnt
         }
         
-      }
+        } else { 
+
+          arr[shtTitle] =  {  
+            colHdrs:      [],
+            vals:         [],
+            columnCount:  0,
+            rowCount:     0
+          }
+
+        }
   
-      resolve(arr)
+        resolve(arr)
+
+      }
   
     })
   
@@ -574,7 +587,7 @@ const Retrier = class {
       
   }
   
-   async function deleteSheet(shtId) { // **
+  async function deleteSheet(shtId) { // **
     
     const rq = {"requests" : [
       {
@@ -599,7 +612,8 @@ const Retrier = class {
      return response
       
   }
-   async function copySheet(shtId) { // **
+
+  async function copySheet(shtId) { // **
   
     var params = {
       spreadsheetId: spreadsheetId,  
