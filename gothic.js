@@ -27,7 +27,8 @@ export default {
     signout,   // sign out of google for this app.
     revoke,    // revoke the users credentials (presumably upon their request)
     user,      // return the user details.
-    token      // test for and refresh client token if necessary
+    token,      // test for and refresh client token if necessary
+    accessToken // return access token
   };
   
   /**
@@ -40,13 +41,14 @@ export default {
    * Maintain state for the app.
    */
   const state = {
-    prev:      false,
-    loaded:    false,
-    cid:       null,
-    key:       null,
-    scope:     null,
-    discovery: null,
-    user:      null
+    prev:         false,
+    loaded:       false,
+    cid:          null,
+    key:          null,
+    scope:        null,
+    discovery:    null,
+    user:         null,
+    accessToken:  null
   };
   
   const obs = []; // Observers, listening for actionable events.
@@ -73,8 +75,6 @@ export default {
   }
   
   function button(parent_id, params = {}) {
-  
-      console.log('button', parent_id)
   
     const ctr = document.getElementById(parent_id);
     if (!ctr) {
@@ -139,7 +139,10 @@ export default {
   async function token(err) {
       await _authorize()
       //await state.tok_client.requestAccessToken({prompt: ''});
-      return state.tok_client
+  }
+
+  function accessToken() {
+      return state.accessToken
   }
   
   /* ------------------------------------------------------------------------- *\
@@ -168,11 +171,12 @@ export default {
           if (!response.access_token) {
             return rej('authorization-failed');
           }
+          state.accessToken = response.access_token
           res();
         }
       });
-      var x = state.tok_client.requestAccessToken({prompt: ''});
-      console.log('x', x)
+      state.tok_client.requestAccessToken({prompt: ''});
+      
     });
   }
   
