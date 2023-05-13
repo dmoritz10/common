@@ -139,7 +139,7 @@ export default {
   async function token(err) {
       await _authorize()
       //await state.tok_client.requestAccessToken({prompt: ''});
-  
+      return state.tok_client
   }
   
   /* ------------------------------------------------------------------------- *\
