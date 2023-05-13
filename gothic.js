@@ -171,7 +171,8 @@ export default {
           res();
         }
       });
-      state.tok_client.requestAccessToken({prompt: ''});
+      var x = state.tok_client.requestAccessToken({prompt: ''});
+      console.log('x', x)
     });
   }
   
