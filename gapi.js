@@ -1002,4 +1002,36 @@ const Retrier = class {
 
   }
 
-   
+  async function uploadPhoto(params) { // 
+
+    const callerName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
+    console.log('pre gapi', callerName)     
+
+    const options = { limit: 5, delay: 2000, quotaExceeded: [429, 403]};
+    const retrier = new Retrier(options);
+    let response = await retrier
+      .resolve(async attempt => 
+        await axios.post("https://photoslibrary.googleapis.com/v1/uploads", params.file.data, {
+          headers: {
+            "Content-Type": "application/octet-stream",
+            "X-Goog-Upload-File-Name": params.file.name,
+            "X-Goog-Upload-Protocol": "raw",
+            Authorization: `Bearer ${params.accessToken}`,
+            "Access-Control-Allow-Origin": "https://photoslibrary.googleapis.com",
+            "Access-Control-Allow-Headers": "Content-Type",
+            "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS, HEAD"
+          }
+        }
+      ))
+      .then(
+          result => {console.log('result', result);return result},
+          error =>  {console.log(error) ;return error}
+      );
+    
+    console.log('post gapi', callerName)  
+                    
+    return response 
+
+  }
+
+      
