@@ -221,7 +221,7 @@ export default {
       google.accounts.id.initialize({
         client_id: state.cid,
         auto_select: true,
-        // use_fedcm_for_prompt: true,
+        use_fedcm_for_prompt: true,
         callback: _on_response
       });
       
