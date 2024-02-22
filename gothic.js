@@ -99,15 +99,16 @@ export default {
     function _handle_prompt_events(evt) {
 
       console.log('evt', evt)
-      if (evt.isNotDisplayed()) {
-        if (evt.getNotDisplayedReason() === 'suppressed_by_user') {
-          _disable();
-          _notify('onetap_suppressed');
-        }
-      }
-      if (evt.isSkippedMoment()) {
-        _notify('onetap_suppressed');
-      }
+
+      // if (evt.isNotDisplayed()) {
+      //   if (evt.getNotDisplayedReason() === 'suppressed_by_user') {
+      //     _disable();
+      //     _notify('onetap_suppressed');
+      //   }
+      // }
+      // if (evt.isSkippedMoment()) {
+      //   _notify('onetap_suppressed');
+      // }
     }
   
     google.accounts.id.prompt(_handle_prompt_events);
