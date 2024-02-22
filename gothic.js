@@ -97,6 +97,8 @@ export default {
   
   function onetap() {
     function _handle_prompt_events(evt) {
+
+      console.log('evt', evt)
       if (evt.isNotDisplayed()) {
         if (evt.getNotDisplayedReason() === 'suppressed_by_user') {
           _disable();
