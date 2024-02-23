@@ -111,7 +111,8 @@ export default {
       // }
     }
   
-    google.accounts.id.prompt(_handle_prompt_events);
+    // google.accounts.id.prompt(_handle_prompt_events);
+    google.accounts.id.prompt();
   }
   
   function unobserve(cb) {
