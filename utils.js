@@ -55,7 +55,7 @@ var yesNoCancel = function (title, message) {
 
     let dialog = bootbox.dialog({
       title: title,
-      message: message,
+      message: 'hi dan',
       size: 'large',
       buttons: {
         cancel: {
