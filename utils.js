@@ -49,6 +49,39 @@ var prompt = function (title, inputType) {
   });
 }
 
+var yesNoCancel = function (title, inputType) {
+
+  return new Promise(resolve => {
+
+    let dialog = bootbox.dialog({
+      title: 'A custom dialog with buttons and callbacks',
+      message: "<p>This dialog has buttons. Each button has it's own callback function.</p>",
+      size: 'large',
+      buttons: {
+        cancel: {
+          label: "Cancel",
+          callback: function(result){
+          resolve('Cancel');
+          }
+        },
+        yes: {
+        label: "Yes",
+        callback: function(result){
+          resolve('Yes');
+          }
+        },
+        no: {
+        label: "No",
+        callback: function(result){
+          resolve('Yes');
+          }
+        }
+      }
+      });
+    dialog.init()
+  });
+}
+
 function toast(e, delay = 5000) {
 
   $("#toast-content").html(e)
