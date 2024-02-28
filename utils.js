@@ -49,13 +49,13 @@ var prompt = function (title, inputType) {
   });
 }
 
-var yesNoCancel = function (title, inputType) {
+var yesNoCancel = function (title, message) {
 
   return new Promise(resolve => {
 
     let dialog = bootbox.dialog({
-      title: 'A custom dialog with buttons and callbacks',
-      message: "<p>This dialog has buttons. Each button has it's own callback function.</p>",
+      title: title,
+      message: message,
       size: 'large',
       buttons: {
         cancel: {
