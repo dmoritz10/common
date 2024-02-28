@@ -73,11 +73,13 @@ var yesNoCancel = function (title, message) {
         no: {
         label: "No",
         callback: function(result){
-          resolve('Yes');
+          resolve('No');
           }
         }
       }
       });
+
+    console.log('title', title, message)
     dialog.init()
   });
 }
