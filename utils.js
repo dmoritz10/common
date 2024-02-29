@@ -66,12 +66,14 @@ var yesNoCancel = function (title, message) {
         },
         yes: {
         label: "Yes",
+        className: 'btn-success',
         callback: function(result){
           resolve('Yes');
           }
         },
         no: {
         label: "No",
+        className: 'btn-success',
         callback: function(result){
           resolve('No');
           }
