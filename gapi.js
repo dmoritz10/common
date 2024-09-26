@@ -984,6 +984,8 @@ const Retrier = class {
 
   async function createPhotos(params) { // 
 
+    console.log('createPhotos params', params)
+
     const callerName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
     console.log('pre gapi', callerName)     
 
