@@ -1081,3 +1081,30 @@ const Retrier = class {
     return response 
 
   }
+
+  
+  async function addMediaItemsToAlbums(albumId, mediaItemIds) {
+
+    const callerName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
+    console.log('pre gapi', callerName)     
+
+    const options = { limit: 5, delay: 2000, quotaExceeded: [429, 403]};
+    const retrier = new Retrier(options);
+    let response = await retrier
+      .resolve(async attempt => await gapi.client.photoslibrary.albums.batchAddMediaItems({
+        albumId: albumId,
+        resource: {
+          mediaItemIds: mediaItemIds
+        }
+      })
+    )
+      .then(
+          result => {console.log('result', result);return result},
+          error =>  {console.log(error) ;return error}
+      );
+    
+    console.log('post gapi', callerName)  
+                    
+    return response 
+
+  }
