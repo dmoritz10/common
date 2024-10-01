@@ -1073,9 +1073,9 @@ const Retrier = class {
                 Authorization: `Bearer ${accessToken}`,
               },
             })
-            .then(({ data }) => {
+            .then(async ({ data }) => {
               r({
-                description: description,
+                description: await buildDescr(data),
                 simpleMediaItem: { fileName: file.name, uploadToken: data },
               });
             });
