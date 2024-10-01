@@ -1076,7 +1076,7 @@ const Retrier = class {
             .then(async ({ data }) => {
               console.log('data', data)
               r({
-                description: await buildDescr(arrayBuffer),
+                description: 'hi dan',
                 simpleMediaItem: { fileName: file.name, uploadToken: data },
               });
             });
