@@ -1062,10 +1062,21 @@ const Retrier = class {
   function uploadPhotos_promiseAll({ files, albumId, accessToken }) {
 
       const description = new Date().toISOString();
-      const promises = Array.from(files).map((file) => {
+      const promises = Array.from(files).map(async (file) => {
+
+        const data = await readFile(file);
+
+        let imageDescr = await buildDescr(data)
+        console.log('imageDescr', imageDescr)
+    
+        const uParams = {
+          file: {name: file.name, data:data},
+          accessToken: accessToken 
+        };
+    
         return new Promise((r) => {
           axios
-            .post("https://photoslibrary.googleapis.com/v1/uploads", file, {
+            .post("https://photoslibrary.googleapis.com/v1/uploads", data, {
               headers: {
                 "Content-Type": "application/octet-stream",
                 "X-Goog-Upload-File-Name": file.name,
@@ -1076,7 +1087,7 @@ const Retrier = class {
             .then(async ({ data }) => {
               console.log('data', data)
               r({
-                description: 'hi dan',
+                description: imageDescr,
                 simpleMediaItem: { fileName: file.name, uploadToken: data },
               });
             });
