@@ -1059,7 +1059,7 @@ const Retrier = class {
 
   }
 
-  function uploadPhotos_promiseall({ files, albumId, accessToken }) {
+  function uploadPhotos_promiseAll({ files, albumId, accessToken }) {
 
       const description = new Date().toISOString();
       const promises = Array.from(files).map((file) => {
