@@ -1074,8 +1074,9 @@ const Retrier = class {
               },
             })
             .then(async ({ data }) => {
+              const arrayBuffer = await data.arrayBuffer();
               r({
-                description: await buildDescr(data),
+                description: await buildDescr(arrayBuffer),
                 simpleMediaItem: { fileName: file.name, uploadToken: data },
               });
             });
