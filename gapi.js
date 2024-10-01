@@ -1059,6 +1059,49 @@ const Retrier = class {
 
   }
 
+  function uploadPhotos({ files, albumId, accessToken }) {
+
+      const description = new Date().toISOString();
+      const promises = Array.from(files).map((file) => {
+        return new Promise((r) => {
+          axios
+            .post("https://photoslibrary.googleapis.com/v1/uploads", file, {
+              headers: {
+                "Content-Type": "application/octet-stream",
+                "X-Goog-Upload-File-Name": file.name,
+                "X-Goog-Upload-Protocol": "raw",
+                Authorization: `Bearer ${accessToken}`,
+              },
+            })
+            .then(({ data }) => {
+              r({
+                description: description,
+                simpleMediaItem: { fileName: file.name, uploadToken: data },
+              });
+            });
+        });
+      });
+      return Promise.all(promises).then((e) => {
+        return new Promise((resolve, reject) => {
+          console.log(e);
+          axios
+            .post(
+              "https://photoslibrary.googleapis.com/v1/mediaItems:batchCreate",
+              JSON.stringify({ albumId: albumId, newMediaItems: e }),
+              {
+                headers: {
+                  "Content-type": "application/json",
+                  Authorization: `Bearer ${accessToken}`,
+                },
+              }
+            )
+            .then(resolve)
+            .catch(reject);
+        });
+      });
+
+  }
+
   async function listAlbums() {
 
     const callerName = new Error().stack.split(/\r\n|\r|\n/g)[1].trim().split(" ")[1]
