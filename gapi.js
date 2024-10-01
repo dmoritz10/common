@@ -1061,6 +1061,13 @@ const Retrier = class {
 
   function uploadPhotos_promiseAll({ files, albumId, accessToken }) {
 
+    const readFile = (file) => new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload  = (event) => resolve(event.target.result);
+      reader.onerror = reject;
+      reader.readAsArrayBuffer(file);
+    });
+
       const description = new Date().toISOString();
       const promises = Array.from(files).map(async (file) => {
 
