@@ -1068,13 +1068,10 @@ const Retrier = class {
           reader.readAsArrayBuffer(file);
         });
 
-        const description = new Date().toISOString();
         const promises = Array.from(files).map(async (file) => {
 
         const data = await readFile(file);
-
         let imageDescr = await buildDescr(data)
-        console.log('imageDescr', imageDescr)
     
         return new Promise((r) => {
           axios
@@ -1089,7 +1086,7 @@ const Retrier = class {
             .then(async ({ data }) => {
               console.log('data', data)
               r({
-                description: 'hi dan',
+                description: imageDescr,
                 simpleMediaItem: { fileName: file.name, uploadToken: data },
               });
             });
