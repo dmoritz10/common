@@ -1061,25 +1061,20 @@ const Retrier = class {
 
   function uploadPhotos_promiseAll({ files, albumId, accessToken }) {
 
-    const readFile = (file) => new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload  = (event) => resolve(event.target.result);
-      reader.onerror = reject;
-      reader.readAsArrayBuffer(file);
-    });
+        const readFile = (file) => new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload  = (event) => resolve(event.target.result);
+          reader.onerror = reject;
+          reader.readAsArrayBuffer(file);
+        });
 
-      const description = new Date().toISOString();
-      const promises = Array.from(files).map(async (file) => {
+        const description = new Date().toISOString();
+        const promises = Array.from(files).map(async (file) => {
 
         const data = await readFile(file);
 
         let imageDescr = await buildDescr(data)
         console.log('imageDescr', imageDescr)
-    
-        const uParams = {
-          file: {name: file.name, data:data},
-          accessToken: accessToken 
-        };
     
         return new Promise((r) => {
           axios
@@ -1094,7 +1089,7 @@ const Retrier = class {
             .then(async ({ data }) => {
               console.log('data', data)
               r({
-                description: imageDescr,
+                description: 'hi dan',
                 simpleMediaItem: { fileName: file.name, uploadToken: data },
               });
             });
