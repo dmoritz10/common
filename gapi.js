@@ -1059,7 +1059,7 @@ const Retrier = class {
 
   }
 
-  function uploadPhotos_promiseAll({ files, albumId, accessToken }) {
+  async function uploadPhotos_promiseAll({ files, albumId, accessToken }) {
 
         const readFile = (file) => new Promise((resolve, reject) => {
           const reader = new FileReader();
@@ -1092,7 +1092,7 @@ const Retrier = class {
             });
         });
       });
-      return Promise.all(promises).then((e) => {
+      return await Promise.all(promises).then((e) => {
         return new Promise((resolve, reject) => {
           console.log(e);
           axios
