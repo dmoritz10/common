@@ -1084,7 +1084,6 @@ const Retrier = class {
               },
             })
             .then(async ({ data }) => {
-              console.log('data', data)
               r({
                 description: imageDescr,
                 simpleMediaItem: { fileName: file.name, uploadToken: data },
